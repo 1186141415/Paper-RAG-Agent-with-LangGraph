@@ -1,0 +1,11 @@
+langgraph
+langchain
+langchain-openai
+fastapi
+uvicorn
+openai
+python-dotenv
+pypdf
+numpy
+pydantic
+faiss-cpu

@@ -4,9 +4,6 @@
 项目基于 **Python 3.11** 构建，当前版本使用 **FastAPI + FAISS + OpenAI-compatible API + LangGraph**，支持论文 PDF 加载、文本切分、向量检索、RAG 问答、多轮对话、工具调用，以及基于状态图的 Agent 编排。
 
 这个项目的目标不是只做一个“能跑的 RAG Demo”，而是逐步搭建一个 **可运行、可解释、可展示、可扩展** 的论文分析系统，并为后续的 **Dify / MCP / Web 产品化** 打基础。
-
----
-
 ```mermaid
 flowchart TD
     A[User or Client] --> B[FastAPI API main.py]
@@ -92,6 +89,10 @@ flowchart TD
     P --> C2
     C2 --> Q[Return JSON response]
 ```
+该系统采用“接口层 + 会话管理层 + LangGraph 编排层 + 工具层 + RAG 检索层 + 数据处理层”的结构。
+用户请求首先通过 FastAPI 进入系统，结合 session_id 获取历史对话后，交由 LangGraph 编排层处理。编排层基于状态对象 AgentState 串联 choose_tool、execute_tool 和 generate_answer 三个节点，实现工具选择、工具执行和结果汇总。对于文档类问题，系统会进一步调用 RAG 模块完成向量检索、重排序和基于上下文的回答生成；对于通用问题，则调用 LLM 或其他工具完成响应。整个系统支持多轮对话、工具扩展和后续更复杂 Agent 工作流的继续演进。
+---
+
 
 ## 1. Project Overview
 

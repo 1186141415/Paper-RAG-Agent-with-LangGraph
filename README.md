@@ -1,9 +1,14 @@
 # Paper RAG Agent with LangGraph
 
 一个面向 **科研论文检索、问答与辅助分析** 的 RAG Agent 工程实践项目。  
-项目基于 **Python 3.11** 构建，当前版本使用 **FastAPI + FAISS + OpenAI-compatible API + LangGraph**，支持论文 PDF 加载、文本切分、向量检索、RAG 问答、多轮对话、工具调用，以及基于状态图的 Agent 编排。
+项目基于 **Python 3.11** 构建，当前版本使用 **FastAPI + FAISS + OpenAI-compatible API + LangGraph + MCP**，支持论文 PDF 加载、文本切分、向量检索、RAG 问答、多轮对话、工具调用，以及基于状态图的 Agent 编排。
 
-这个项目的目标不是只做一个“能跑的 RAG Demo”，而是逐步搭建一个 **可运行、可解释、可展示、可扩展** 的论文分析系统，并为后续的 **Dify / MCP / Web 产品化** 打基础。
+当前系统已经同时具备本地工具能力与外部工具能力：
+
+- **本地工具能力**：`rag / llm / calculator / time`
+- **外部工具能力**：通过 **MCP** 接入的 `web_search`
+
+这个项目的目标不是只做一个“能跑的 RAG Demo”，而是逐步搭建一个 **可运行、可解释、可展示、可扩展** 的论文分析系统，并为后续的 **Dify / Web 产品化** 打基础。
 ```mermaid
 flowchart TD
     A[User or Client] --> B[FastAPI API main.py]
@@ -178,7 +183,8 @@ flowchart TD
 - 基于检索上下文完成 RAG 问答
 - 支持多轮对话历史注入
 - 支持基于 `session_id` 的会话隔离
-- 支持 `rag / calculator / time / llm` 四类工具
+- 支持 `rag / calculator / time / llm / web_search` 五类工具
+- 支持通过 **MCP** 接入外部网页搜索能力
 - 使用 LangGraph 构建 Agent 工作流
 - 提供 FastAPI 接口用于服务化调用
 - 提供基础日志记录与异常兜底
@@ -197,6 +203,9 @@ flowchart TD
 - **OpenAI-compatible API**
 - **DeepSeek Chat Model**
 - **text-embedding-3-small**
+- **MCP (Model Context Protocol)**
+- **Zhipu MCP Web Search**
+- **langchain-mcp-adapters**
 - **dotenv**
 - **Git / GitHub**
 
@@ -224,6 +233,7 @@ Paper-RAG-Agent-with-LangGraph/
 │  ├─ rag_system.py        # RAG 核心逻辑
 │  ├─ session_manager.py   # 多轮会话管理
 │  ├─ tools.py             # 工具定义
+│  ├─ mcp_tools.py         # MCP 外部工具封装（如 web_search）
 │  ├─ __init__.py
 │  ├─ graph/               # LangGraph 工作流编排
 │  │  ├─ builder.py        # 构建图
@@ -231,14 +241,17 @@ Paper-RAG-Agent-with-LangGraph/
 │  │  ├─ state.py          # 状态定义
 │  │  ├─ workflow.py       # 对图调用再封装一层
 │  │  └─ __init__.py
-│  └─ __pycache__/         # Python 缓存，可忽略
 ├─ data/                   # 原始知识库数据
 │  ├─ Paper1.pdf
 │  └─ Paper2.pdf
 ├─ tests/                  # 冒烟测试 / 功能验证脚本
 │  ├─ smoke_test_graph.py
 │  ├─ smoke_test_nodes.py
-│  └─ smoke_test_state.py
+│  ├─ smoke_test_state.py
+│  ├─ smoke_test_mcp_zhipu.py
+│  ├─ smoke_test_mcp_call.py
+│  ├─ smoke_test_web_search_tool.py
+│  └─ smoke_test_tools_with_mcp.py
 ├─ requirements.txt        # 依赖列表
 └─ README.md               # 项目说明
 ```
@@ -247,12 +260,12 @@ Paper-RAG-Agent-with-LangGraph/
 
 - `main.py`：FastAPI 服务入口
 - `rag_system.py`：RAG 检索、rerank、问答核心逻辑
-- `tools.py`：工具定义
+- `tools.py`：统一工具注册入口
+- `mcp_tools.py`：MCP 外部工具封装
 - `session_manager.py`：按 `session_id` 管理历史对话
 - `graph/`：LangGraph 编排层实现
 - `data_loader.py`：PDF 加载、清洗、切分
 
----
 
 ## 7. Workflow
 
@@ -316,13 +329,17 @@ LLM Answer
 用于论文 / 文档相关问题的检索增强回答。
 
 ### 2) calculator
-用于简单数学表达式计算。未来用于处理一些论文的公式
+用于简单数学表达式计算。未来可用于处理论文中的公式相关问题。
 
 ### 3) time
-用于返回当前时间。未来考虑设计用于查询文献的发布时间。
+用于返回当前时间。未来可扩展到文献发布时间或时间相关信息查询。
 
-### 4) llm
-用于一般性问题回答。
+### 4) web_search
+用于需要联网、最新信息、实时搜索或本地 PDF 未覆盖的问题。
+当前实现通过 **MCP** 接入外部网页搜索能力，并封装为项目内部可调用工具。
+
+### 5) llm
+用于一般性问题回答，或在不需要文档检索、计算、时间查询、联网搜索时作为默认通用工具。
 
 ---
 
@@ -416,6 +433,12 @@ CHAT_MODEL=deepseek-chat
 EMBEDDING_MODEL=text-embedding-3-small
 
 DATA_DIR=data
+
+ZHIPU_API_KEY=your_zhipu_api_key
+MCP_SEARCH_URL=https://open.bigmodel.cn/api/mcp/web_search_prime/mcp
+MCP_SEARCH_RECENCY=oneMonth
+MCP_SEARCH_CONTENT_SIZE=medium
+MCP_SEARCH_LOCATION=us
 ```
 
 ### 12.5 Prepare Data
@@ -519,6 +542,22 @@ http://127.0.0.1:8000/docs
 - 系统完成 embedding、检索、生成回答
 - 日志中可看到 RAG 相关调用链路
 
+### 13.6 测试 MCP 外部搜索工具
+
+```json
+{
+  "session_id": "smoke-web",
+  "question": "Search the web for the latest AI agent engineering trends."
+}
+```
+
+预期现象：
+
+- 路由到 `web_search`
+- 系统通过 MCP 调用外部网页搜索能力
+- 返回若干条网页搜索结果
+- 日志中可看到 `web_search_tool` 被执行成功
+
 ---
 ## 14. Example Use Cases
 
@@ -581,7 +620,7 @@ What time is it now?
 - [ ] 优化 prompt 与工具路由策略
 - [ ] 增加更丰富的工具类型
 - [ ] 接入 Dify 进行工作流原型验证
-- [ ] 接入 MCP 或其他外部能力服务
+- [ ] 扩展更多 MCP 外部工具能力（如论文元数据检索、文件系统、数据库或学术搜索）
 - [ ] 封装固定科研任务能力模块
 - [ ] 增加文献要点提炼与综述提纲生成功能
 - [ ] 增加更完整的日志、评测与配置管理

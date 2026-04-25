@@ -74,7 +74,7 @@ class RAGSystem:
     #    if len(self.chat_history) > max_turn * 2:
     #        self.chat_history = self.chat_history[-max_turn * 2:]
 
-    def ask(self, question, chat_history=None):
+    def ask(self, question, chat_history=None):  # 这个ask，没有返回top_k_chunks
         if chat_history is None:
             chat_history = []
 
@@ -118,6 +118,56 @@ class RAGSystem:
         answer = response.choices[0].message.content
 
         return answer
+
+    def ask_with_trace(self, question, chat_history=None):
+        if chat_history is None:
+            chat_history = []
+
+        retrieved = self.retrieve(question, k=self.top_k)
+
+        # rerank（用 text）
+        texts = [c["text"] for c in retrieved]
+        sorted_indices = self.rerank(question, texts)
+        best_chunks = [retrieved[i] for i in sorted_indices[:self.rerank_k]]
+
+        # 拼 context（加来源）
+        context = ""
+        for c in best_chunks:
+            context += f"[Source: {c['source']}]\n{c['text']}\n\n"
+
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a helpful assistant. Answer based on context and conversation history."
+            }
+        ]
+
+        # 保留历史对话
+        messages.extend(chat_history)
+
+        messages.append({
+            "role": "user",
+            "content": f"{context}\n\nQuestion: {question}"
+        })
+
+        response = client.chat.completions.create(
+            model=CHAT_MODEL,
+            messages=messages
+        )
+
+        answer = response.choices[0].message.content
+
+        retrieved_chunks = []
+        for c in best_chunks:
+            retrieved_chunks.append({
+                "source": c["source"],
+                "text": c["text"],
+            })
+
+        return {
+            "answer": answer,
+            "retrieved_chunks": retrieved_chunks
+        }
 
     def ask_with_agent(self, question):
         decision = decide_tool(question)

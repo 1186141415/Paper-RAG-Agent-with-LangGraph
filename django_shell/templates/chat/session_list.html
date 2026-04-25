@@ -2,23 +2,106 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Session List</title>
+    <title>Session History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 960px;
+            margin: 24px auto;
+            padding: 0 16px;
+            background: #f7f8fa;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            margin-right: 16px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .session-item {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            padding: 14px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background: #f9fafb;
+        }
+
+        .session-item:hover {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .session-title {
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+
+        .session-meta {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .empty {
+            color: #666;
+            padding: 12px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Session List</h1>
-    <p><a href="{% url 'chat_home' %}">← Back to Chat</a></p>
+    <h1>Session History</h1>
+    <p class="desc">
+        这里展示 Django 数据库中保存的历史问答会话，用于回溯用户与论文分析 Agent 的交互记录。
+    </p>
 
-    <ul>
+    <div class="nav">
+        <a href="{% url 'chat_home' %}">Chat Home</a>
+        <a href="{% url 'upload_page' %}">Upload Papers</a>
+        <a href="{% url 'session_list' %}">Session History</a>
+    </div>
+
+    <div class="card">
+        <h3>Saved Sessions</h3>
+
         {% for session in sessions %}
-            <li>
-                <a href="{% url 'session_detail' session.session_id %}">
+            <a class="session-item" href="{% url 'session_detail' session.session_id %}">
+                <div class="session-title">
                     {{ session.title|default:session.session_id }}
-                </a>
-                ({{ session.session_id }}) - {{ session.updated_at }}
-            </li>
+                </div>
+                <div class="session-meta">
+                    <div><strong>Session ID:</strong> {{ session.session_id }}</div>
+                    <div><strong>Last Updated:</strong> {{ session.updated_at }}</div>
+                </div>
+            </a>
         {% empty %}
-            <li>暂无历史会话</li>
+            <p class="empty">暂无历史会话。你可以先回到 Chat Home 发起一次问答。</p>
         {% endfor %}
-    </ul>
+    </div>
 </body>
 </html>

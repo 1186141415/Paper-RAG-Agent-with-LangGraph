@@ -18,4 +18,4 @@ class AgentWorkflow:
         }
 
         result = self.graph.invoke(state)  #返回结果仍是状态图
-        return result["final_answer"]
+        return result

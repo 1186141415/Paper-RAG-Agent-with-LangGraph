@@ -40,7 +40,7 @@ def startup_event():
     rag = RAGSystem(chunks)
     rag.build_index()
 
-    workflow = AgentWorkflow(TOOLS, rag=rag) # 初始化编排层
+    workflow = AgentWorkflow(TOOLS, rag=rag)  # 初始化编排层
 
     logger.info("RAG + LangGraph ready!")
 
@@ -50,11 +50,28 @@ def ask_question(req: QueryRequest):
     try:
         history = session_manager.get_history(req.session_id)
 
-        answer = workflow.invoke(
+        result = workflow.invoke(
             session_id=req.session_id,
             query=req.question,
             chat_history=history
         )
+
+        answer = result.get("final_answer", "")
+        chunks = result.get("retrieved_chunks", [])
+
+        decision = result.get("decision", {})
+        tool_result = result.get("tool_result", {})
+
+        agent_trace = {
+            "route_decision": decision,
+            "tool_used": tool_result.get("tool_name", ""),
+            "tool_input": tool_result.get("tool_input", ""),
+            "workflow": [
+                "choose_tool",
+                "execute_tool",
+                "generate_answer"
+            ]
+        }
 
         session_manager.append_turn(
             req.session_id,
@@ -65,7 +82,9 @@ def ask_question(req: QueryRequest):
         return {
             "session_id": req.session_id,
             "question": req.question,
-            "answer": answer
+            "answer": answer,
+            "chunks": chunks,
+            "agent_trace": agent_trace,
         }
 
     except Exception as e:
@@ -79,4 +98,32 @@ def clear_session(session_id: str):
     return {
         "session_id": session_id,
         "message": "session cleared"
+    }
+
+
+@app.post("/reload_kb")
+def reload_kb():
+    global rag, workflow
+
+    logger.info("Reloading knowledge base...")
+    print("🔄 Reloading knowledge base...")
+
+    docs = load_pdfs(DATA_DIR)
+    logger.info(f"docs数量: {len(docs)}")
+
+    chunks = process_documents(docs)
+    logger.info(f"chunks数量: {len(chunks)}")
+
+    rag = RAGSystem(chunks)
+    rag.build_index()
+
+    workflow = AgentWorkflow(TOOLS, rag=rag)
+
+    logger.info("Knowledge base and AgentWorkflow reloaded successfully.")
+
+    return {
+        "status": "success",
+        "message": f"Knowledge base reloaded. Total chunks: {len(chunks)}",
+        "total_docs": len(docs),
+        "total_chunks": len(chunks),
     }

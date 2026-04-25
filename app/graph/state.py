@@ -29,5 +29,7 @@ class AgentState(TypedDict, total=False):
     # 最终返回给用户的答案
     final_answer: str
 
+    retrieved_chunks: list[dict[str, Any]]
+
     # 预留错误字段，后面做异常兜底会用到
     error: str

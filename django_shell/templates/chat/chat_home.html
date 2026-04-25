@@ -3,39 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <title>Paper RAG Agent</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 960px;
+            margin: 24px auto;
+            padding: 0 16px;
+            background: #f7f8fa;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            margin-right: 16px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            margin-bottom: 12px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .session-info {
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: #dbeafe;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: #e5e7eb;
+        }
+
+        .meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .error {
+            color: #b91c1c;
+            margin-top: 10px;
+        }
+
+        .empty {
+            color: #666;
+        }
+
+        .section-desc {
+            color: #666;
+            font-size: 14px;
+            margin-top: -6px;
+            margin-bottom: 14px;
+        }
+
+        .trace-card {
+            border-left: 4px solid #2563eb;
+        }
+
+        .trace-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .trace-item {
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .trace-label {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        pre {
+            background: #111827;
+            color: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .chunk-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .chunk-source {
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 6px;
+        }
+
+        .chunk-text {
+            color: #374151;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-    <h1>Paper RAG Agent with Django Shell</h1>
-    <p>
-        <a href="{% url 'session_list' %}">View Session History</a> |
+    <h1>Paper RAG Agent</h1>
+    <p>一个基于 Django 壳层 + FastAPI 推理服务 + LangGraph 编排的论文问答系统</p>
+
+    <div class="nav">
+        <a href="{% url 'chat_home' %}">Chat Home</a>
+        <a href="{% url 'session_list' %}">View Session History</a>
         <a href="{% url 'upload_page' %}">Upload Papers</a>
-    </p>
+    </div>
 
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            <label>Session ID:</label>
-            <input type="text" name="session_id" value="demo-session">
-        </div>
-        <div>
-            <label>Question:</label>
-            <textarea name="question" rows="6" cols="80"></textarea>
-        </div>
-        <button type="submit">Ask</button>
-    </form>
+    <div class="card">
+    <h3>Recent Sessions</h3>
 
-    {% if error %}
-        <hr>
-        <h3>Error</h3>
-        <p>{{ error }}</p>
+    {% if recent_sessions %}
+        <ul>
+            {% for s in recent_sessions %}
+                <li style="margin-bottom: 8px;">
+                    <a href="{% url 'chat_home' %}?session_id={{ s.session_id }}">
+                        {{ s.title|default:s.session_id }}
+                    </a>
+                    <span style="color: gray; font-size: 12px;">
+                        ({{ s.updated_at }})
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty">暂无历史会话</p>
+    {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="session-info">
+            当前会话：<strong>{{ current_session_id }}</strong>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <label>Session ID:</label>
+                <input type="text" name="session_id" value="{{ current_session_id }}">
+            </div>
+
+            <div class="form-row">
+                <label>Question:</label>
+                <textarea name="question" rows="5" placeholder="请输入你的问题，例如：What is the difference between paper1 and paper2?"></textarea>
+            </div>
+
+            <button type="submit">Ask</button>
+        </form>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    {% if agent_trace %}
+    <div class="card trace-card">
+        <h3>Agent Trace</h3>
+        <p class="section-desc">展示本轮问答中 LangGraph Agent 的工具选择和执行路径。</p>
+
+        <div class="trace-grid">
+            <div class="trace-item">
+                <span class="trace-label">Tool Used</span>
+                <strong>{{ agent_trace.tool_used }}</strong>
+            </div>
+
+            <div class="trace-item">
+                <span class="trace-label">Tool Input</span>
+                <strong>{{ agent_trace.tool_input }}</strong>
+            </div>
+
+            <div class="trace-item">
+                <span class="trace-label">Workflow</span>
+                <strong>
+                    {% for step in agent_trace.workflow %}
+                        {{ step }}{% if not forloop.last %} → {% endif %}
+                    {% endfor %}
+                </strong>
+            </div>
+        </div>
+
+        <details>
+            <summary>Route Decision Raw Data</summary>
+            <pre>{{ agent_trace.route_decision }}</pre>
+        </details>
+    </div>
     {% endif %}
 
-    {% if result %}
-        <hr>
-        <h3>Result</h3>
-        <p><strong>Session:</strong> {{ result.session_id }}</p>
-        <p><strong>Question:</strong> {{ result.question }}</p>
-        <p><strong>Answer:</strong> {{ result.answer }}</p>
+    <div class="card">
+        <h3>Conversation</h3>
+
+        {% if messages %}
+            <div class="chat-box">
+                {% for msg in messages %}
+                    <div class="message {{ msg.role }}">
+                        <div class="meta">
+                            {% if msg.role == "user" %}
+                                User
+                            {% else %}
+                                AI Assistant
+                            {% endif %}
+                            · {{ msg.created_at }}
+                        </div>
+                        {{ msg.content }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty">当前会话还没有消息，先问一个问题试试。</p>
+        {% endif %}
+    {% if chunks %}
+        <div class="card">
+            <h3>Retrieved Context (Top-K)</h3>
+            <p class="section-desc">展示 RAG 检索阶段命中的论文片段，用于说明回答依据。</p>
+
+            {% for c in chunks %}
+                <div class="chunk-card">
+                    <div class="chunk-source">{{ c.source }}</div>
+                    <div class="chunk-text">{{ c.text }}</div>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
+    </div>
 </body>
 </html>

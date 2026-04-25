@@ -213,6 +213,19 @@ def generate_answer_node(state: AgentState) -> AgentState:
     tool_result = state["tool_result"]
     logger.info(f"[generate_answer_node] final_answer: {tool_result['tool_output']}")
 
+    output = tool_result["tool_output"]
+
+    if isinstance(output, dict):
+        return {
+            "final_answer": output.get("answer", ""),
+            "retrieved_chunks": output.get("retrieved_chunks", [])
+        }
+
     return {
-        "final_answer": str(tool_result["tool_output"])
+        "final_answer": str(output),
+        "retrieved_chunks": []
     }
+
+    # return {
+    #     "final_answer": str(tool_result["tool_output"])
+    # }

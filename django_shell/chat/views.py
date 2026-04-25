@@ -4,19 +4,23 @@ from .models import ChatSession, ChatMessage
 
 
 def chat_home(request):
-    result = None
     error = None
+    chunks = []
+    agent_trace = None
+    current_session_id = request.GET.get("session_id", "demo-session").strip()
 
     if request.method == "POST":
-        session_id = request.POST.get("session_id", "").strip()
+        current_session_id = request.POST.get("session_id", "").strip()
         question = request.POST.get("question", "").strip()
 
-        if session_id and question:
+        if current_session_id and question:
             try:
-                result = ask_ai(session_id=session_id, question=question)
+                result = ask_ai(session_id=current_session_id, question=question)
+                chunks = result.get("chunks", [])
+                agent_trace = result.get("agent_trace")
 
-                session_obj, created = ChatSession.objects.get_or_create( # 先通过session_id查找会话，有会话返回会话对象，同时created字段设置为false，没有相关的会话字段，那么创建一个会话对象，并且通过default字段设置title
-                    session_id=session_id,
+                session_obj, created = ChatSession.objects.get_or_create(
+                    session_id=current_session_id,
                     defaults={"title": question[:60]}
                 )
 
@@ -41,14 +45,26 @@ def chat_home(request):
         else:
             error = "session_id 和 question 不能为空"
 
+    session_obj = ChatSession.objects.filter(session_id=current_session_id).first()
+    messages = []
+    if session_obj:
+        messages = session_obj.messages.all().order_by("created_at")
+
+    recent_sessions = ChatSession.objects.all().order_by("-updated_at")[:5]
+
     return render(
         request,
         "chat/chat_home.html",
         {
-            "result": result,
             "error": error,
+            "current_session_id": current_session_id,
+            "messages": messages,
+            "recent_sessions": recent_sessions,
+            "chunks": chunks,
+            "agent_trace": agent_trace,
         }
     )
+
 
 def session_list(request):
     sessions = ChatSession.objects.all().order_by("-updated_at")

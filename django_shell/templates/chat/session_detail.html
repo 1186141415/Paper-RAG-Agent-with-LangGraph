@@ -3,29 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <title>Session Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 960px;
+            margin: 24px auto;
+            padding: 0 16px;
+            background: #f7f8fa;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            margin-bottom: 20px;
+        }
+
+        .nav a {
+            margin-right: 16px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            margin-bottom: 20px;
+        }
+
+        .session-meta {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .meta-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .meta-label {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            color: #111827;
+            font-weight: bold;
+            word-break: break-all;
+        }
+
+        .chat-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: #dbeafe;
+        }
+
+        .message.assistant {
+            align-self: flex-start;
+            background: #e5e7eb;
+        }
+
+        .meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .empty {
+            color: #666;
+            padding: 12px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Session Detail</h1>
-
-    <p><strong>Session ID:</strong> {{ session_obj.session_id }}</p>
-    <p><strong>Title:</strong> {{ session_obj.title }}</p>
-
-    <p>
-        <a href="{% url 'chat_home' %}">← Back to Chat</a> |
-        <a href="{% url 'session_list' %}">View All Sessions</a>
+    <p class="desc">
+        当前页面展示单个会话下保存的 user / assistant 消息记录，用于说明 Django 持久化保存了历史问答过程。
     </p>
 
-    <hr>
+    <div class="nav">
+        <a href="{% url 'chat_home' %}">Chat Home</a>
+        <a href="{% url 'upload_page' %}">Upload Papers</a>
+        <a href="{% url 'session_list' %}">Session History</a>
+    </div>
 
-    {% for msg in messages %}
-        <div style="margin-bottom: 16px;">
-            <p><strong>{{ msg.role }}:</strong></p>
-            <p>{{ msg.content }}</p>
-            <p style="color: gray;">{{ msg.created_at }}</p>
+    <div class="card">
+        <h3>Session Info</h3>
+
+        <div class="session-meta">
+            <div class="meta-item">
+                <span class="meta-label">Session ID</span>
+                <span class="meta-value">{{ session_obj.session_id }}</span>
+            </div>
+
+            <div class="meta-item">
+                <span class="meta-label">Title</span>
+                <span class="meta-value">{{ session_obj.title|default:session_obj.session_id }}</span>
+            </div>
+
+            <div class="meta-item">
+                <span class="meta-label">Created At</span>
+                <span class="meta-value">{{ session_obj.created_at }}</span>
+            </div>
+
+            <div class="meta-item">
+                <span class="meta-label">Last Updated</span>
+                <span class="meta-value">{{ session_obj.updated_at }}</span>
+            </div>
         </div>
-        <hr>
-    {% empty %}
-        <p>这个会话还没有消息。</p>
-    {% endfor %}
+    </div>
+
+    <div class="card">
+        <h3>Conversation Messages</h3>
+
+        {% if messages %}
+            <div class="chat-box">
+                {% for msg in messages %}
+                    <div class="message {{ msg.role }}">
+                        <div class="meta">
+                            {% if msg.role == "user" %}
+                                User
+                            {% else %}
+                                AI Assistant
+                            {% endif %}
+                            · {{ msg.created_at }}
+                        </div>
+                        {{ msg.content }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty">这个会话还没有消息。</p>
+        {% endif %}
+    </div>
 </body>
 </html>

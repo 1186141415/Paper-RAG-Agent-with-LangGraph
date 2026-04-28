@@ -28,7 +28,11 @@ def maybe_force_web_search(query: str, decision: dict) -> dict:
     looks_like_local_doc = any(k in q for k in local_doc_keywords)
 
     if has_web_signal and looks_like_local_doc:
-        return {"tool": "web_search", "input": query}
+        return {
+            "tool": "web_search",
+            "input": query,
+            "reason": "The question contains web/current information signals and should use external search instead of only local documents."
+        }
 
     return decision
 
@@ -49,28 +53,59 @@ def clean_json_text(text: str) -> str:
 
 def normalize_decision(decision: dict, query: str, valid_tool_names: set[str]) -> dict:
     if not isinstance(decision, dict):
-        return {"tool": "llm", "input": query}
+        return {
+            "tool": "llm",
+            "input": query,
+            "reason": "Router output is not a valid JSON object, so the system falls back to the general LLM tool."
+        }
 
     tool = str(decision.get("tool", "")).strip().lower()
-    tool_input = str(decision.get("input", "")).strip()
+
+    raw_input = decision.get("input", "")
+    tool_input = "" if raw_input is None else str(raw_input).strip()
+
+    raw_reason = decision.get("reason", "")
+    reason = "" if raw_reason is None else str(raw_reason).strip()
+
+    if not reason:
+        reason = f"The router selected {tool or 'llm'} based on the question type."
 
     if tool not in valid_tool_names:
-        return {"tool": "llm", "input": query}
+        return {
+            "tool": "llm",
+            "input": query,
+            "reason": f"Router selected an invalid tool '{tool}', so the system falls back to the general LLM tool."
+        }
 
-    # 关键规则：
-    # 对 rag / llm / time 这三类，默认都把原始 query 继续传下去，
-    # 不允许 router 自己现编一个答案塞进 input。
-    # 对 rag / llm / time / web_search，都统一保留原始 query
+    # 对 rag / llm / time / web_search，统一保留原始 query
+    # 避免 router 自己把 input 改写成答案或过度改写问题
     if tool in {"rag", "llm", "time", "web_search"}:
-        return {"tool": tool, "input": query}
+        return {
+            "tool": tool,
+            "input": query,
+            "reason": reason
+        }
 
-    # calculator 允许保留模型抽出来的表达式
+    # calculator 允许保留模型抽出来的数学表达式
     if tool == "calculator":
         if not tool_input:
-            return {"tool": "calculator", "input": query}
-        return {"tool": "calculator", "input": tool_input}
+            return {
+                "tool": "calculator",
+                "input": query,
+                "reason": reason
+            }
 
-    return {"tool": "llm", "input": query}
+        return {
+            "tool": "calculator",
+            "input": tool_input,
+            "reason": reason
+        }
+
+    return {
+        "tool": "llm",
+        "input": query,
+        "reason": "The router result could not be normalized, so the system falls back to the general LLM tool."
+    }
 
 
 def build_choose_tool_node(tools: list[dict[str, Any]]):
@@ -105,14 +140,16 @@ def build_choose_tool_node(tools: list[dict[str, Any]]):
                     Rules:
                     1. You must return exactly one JSON object.
                     2. JSON format:
-                    {{"tool": "...", "input": "..."}}
+                    {{"tool": "...", "input": "...", "reason": "..."}}
                     3. tool must be one of: rag, calculator, time, web_search, llm
-                    4. For rag, llm, time, and web_search:
+                    4. reason must be one short sentence explaining why this tool is selected.
+                    5. reason must not answer the user's question.
+                    6. For rag, llm, time, and web_search:
                        - input should stay the same as the user's original question
                        - do not invent a new sentence
-                    5. For calculator:
+                    7. For calculator:
                        - input should be the math expression only if you can extract it
-                    6. Do not include markdown, explanations, or code fences.
+                    8. Do not include markdown, explanations, or code fences.
             
                     User question:
                     {query}
@@ -141,7 +178,11 @@ def build_choose_tool_node(tools: list[dict[str, Any]]):
         except Exception as e:
             logger.exception("choose_tool_node failed")
             return {
-                "decision": {"tool": "llm", "input": query},
+                "decision": {
+                    "tool": "llm",
+                    "input": query,
+                    "reason": "Router failed, so the system falls back to the general LLM tool."
+                },
                 "error": f"choose_tool_node failed: {str(e)}"
             }
 

@@ -14,7 +14,12 @@ class AgentState(TypedDict, total=False):
     chat_history: list[dict[str, str]]
 
     # 路由决策结果
-    # 例如: {"tool": "rag", "input": "what is ..."}
+    # 例如:
+    # {
+    #   "tool": "rag",
+    #   "input": "what is ...",
+    #   "reason": "The question requires evidence from uploaded papers."
+    # }
     decision: dict[str, Any]
 
     # 工具执行结果

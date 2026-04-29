@@ -2,11 +2,42 @@ import os
 from pypdf import PdfReader
 import re
 
+# Character-based chunking parameters.
+# For English academic papers, 200 characters is usually too short and may break
+# method descriptions or experiment conclusions into fragmented pieces.
+DEFAULT_CHUNK_SIZE = 700
+DEFAULT_CHUNK_OVERLAP = 120
 
-def split_text(text, chunk_size=200, overlap=50):
+
+def split_text(text, chunk_size=DEFAULT_CHUNK_SIZE, overlap=DEFAULT_CHUNK_OVERLAP):
+    """
+    Split text into overlapping character-based chunks.
+
+    Current implementation uses character length instead of token length.
+    The default chunk size is tuned for English academic papers:
+    - 700 characters keeps more complete local context than 200 characters.
+    - 120 characters overlap helps preserve continuity across chunks.
+    """
+    if not text:
+        return []
+
+    if chunk_size <= 0:
+        raise ValueError("chunk_size must be positive.")
+
+    if overlap < 0:
+        raise ValueError("overlap must be non-negative.")
+
+    if overlap >= chunk_size:
+        raise ValueError("overlap must be smaller than chunk_size.")
+
     chunks = []
-    for i in range(0, len(text), chunk_size - overlap):
-        chunks.append(text[i:i + chunk_size])
+    step = chunk_size - overlap
+
+    for i in range(0, len(text), step):
+        chunk = text[i:i + chunk_size].strip()
+        if chunk:
+            chunks.append(chunk)
+
     return chunks
 
 def clean_text(text):
@@ -53,7 +84,11 @@ def process_documents(documents):
     all_chunks = []
 
     for doc in documents:
-        chunks = split_text(doc["text"], chunk_size=200, overlap=50)
+        chunks = split_text(
+            doc["text"],
+            chunk_size=DEFAULT_CHUNK_SIZE,
+            overlap=DEFAULT_CHUNK_OVERLAP
+        )
 
         for c in chunks:
             all_chunks.append({

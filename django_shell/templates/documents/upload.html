@@ -58,6 +58,23 @@
             color: #666;
             line-height: 1.6;
         }
+        .reload-box {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .reload-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #047857;
+        }
+
+        .reload-box p {
+            margin: 6px 0;
+        }
     </style>
 </head>
 <body>
@@ -82,6 +99,36 @@
         {% if error %}
             <p class="error">{{ error }}</p>
         {% endif %}
+
+        {% if reload_result %}
+            <div class="reload-box">
+                <h4>Knowledge Base Reload Result</h4>
+
+                <p>
+                    <strong>Status:</strong>
+                    {{ reload_result.status }}
+                </p>
+
+                <p>
+                    <strong>Message:</strong>
+                    {{ reload_result.message }}
+                </p>
+
+                {% if reload_result.total_docs %}
+                    <p>
+                        <strong>Total Docs:</strong>
+                        {{ reload_result.total_docs }}
+                    </p>
+                {% endif %}
+
+                {% if reload_result.total_chunks %}
+                    <p>
+                        <strong>Total Chunks:</strong>
+                        {{ reload_result.total_chunks }}
+                    </p>
+                {% endif %}
+            </div>
+    {% endif %}
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}

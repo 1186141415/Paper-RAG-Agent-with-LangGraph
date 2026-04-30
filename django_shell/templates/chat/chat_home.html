@@ -134,6 +134,37 @@
             margin-bottom: 4px;
         }
 
+        .trace-value {
+            color: #111827;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .badge.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge.danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
         pre {
             background: #111827;
             color: #f9fafb;
@@ -220,36 +251,79 @@
     </div>
 
     {% if agent_trace %}
-    <div class="card trace-card">
-        <h3>Agent Trace</h3>
-        <p class="section-desc">展示本轮问答中 LangGraph Agent 的工具选择和执行路径。</p>
+        <div class="card trace-card">
+            <h3>Agent Trace</h3>
+            <p class="section-desc">
+                展示本轮问答中 LangGraph Agent 的工具选择、路由理由、fallback 状态和实际执行路径。
+            </p>
 
-        <div class="trace-grid">
-            <div class="trace-item">
-                <span class="trace-label">Tool Used</span>
-                <strong>{{ agent_trace.tool_used }}</strong>
+            <div class="trace-grid">
+                <div class="trace-item">
+                    <span class="trace-label">Tool Used</span>
+                    <span class="trace-value">{{ agent_trace.tool_used }}</span>
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Tool Input</span>
+                    <span class="trace-value">{{ agent_trace.tool_input }}</span>
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Route Reason</span>
+                    <span class="trace-value">
+                        {{ agent_trace.route_decision.reason|default:"No reason provided." }}
+                    </span>
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Fallback Used</span>
+                    {% if agent_trace.fallback_used %}
+                        <span class="badge warning">True</span>
+                    {% else %}
+                        <span class="badge success">False</span>
+                    {% endif %}
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Context Sufficient</span>
+                    {% if agent_trace.context_sufficient == True %}
+                        <span class="badge success">True</span>
+                    {% elif agent_trace.context_sufficient == False %}
+                        <span class="badge danger">False</span>
+                    {% else %}
+                        <span class="badge">N/A</span>
+                    {% endif %}
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Retry Count</span>
+                    <span class="trace-value">{{ agent_trace.retry_count|default:0 }}</span>
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Workflow Path</span>
+                    <span class="trace-value">
+                        {% for step in agent_trace.workflow %}
+                            {{ step }}{% if not forloop.last %} → {% endif %}
+                        {% endfor %}
+                    </span>
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Error</span>
+                    {% if agent_trace.error %}
+                        <span class="badge danger">{{ agent_trace.error }}</span>
+                    {% else %}
+                        <span class="badge success">None</span>
+                    {% endif %}
+                </div>
             </div>
 
-            <div class="trace-item">
-                <span class="trace-label">Tool Input</span>
-                <strong>{{ agent_trace.tool_input }}</strong>
-            </div>
-
-            <div class="trace-item">
-                <span class="trace-label">Workflow</span>
-                <strong>
-                    {% for step in agent_trace.workflow %}
-                        {{ step }}{% if not forloop.last %} → {% endif %}
-                    {% endfor %}
-                </strong>
-            </div>
+            <details style="margin-top: 14px;">
+                <summary>Route Decision Raw Data</summary>
+                <pre>{{ agent_trace.route_decision }}</pre>
+            </details>
         </div>
-
-        <details>
-            <summary>Route Decision Raw Data</summary>
-            <pre>{{ agent_trace.route_decision }}</pre>
-        </details>
-    </div>
     {% endif %}
 
     <div class="card">
@@ -274,10 +348,14 @@
         {% else %}
             <p class="empty">当前会话还没有消息，先问一个问题试试。</p>
         {% endif %}
+    </div>
+
     {% if chunks %}
         <div class="card">
             <h3>Retrieved Context (Top-K)</h3>
-            <p class="section-desc">展示 RAG 检索阶段命中的论文片段，用于说明回答依据。</p>
+            <p class="section-desc">
+                展示 RAG 检索阶段命中的论文片段，用于说明回答依据。
+            </p>
 
             {% for c in chunks %}
                 <div class="chunk-card">
@@ -287,6 +365,6 @@
             {% endfor %}
         </div>
     {% endif %}
-    </div>
+
 </body>
 </html>

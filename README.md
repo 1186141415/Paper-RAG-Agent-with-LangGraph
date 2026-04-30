@@ -1,17 +1,18 @@
 # Paper RAG Agent with LangGraph
 
-一个面向 **科研论文阅读、检索问答与辅助分析** 的 AI 应用工程项目。
+一个面向 **科研论文阅读与文献知识回溯** 的轻量级 **RAG Agent 应用系统**。
 
-项目以 **RAG 检索增强问答** 为核心能力，使用 **FastAPI** 提供 AI 推理服务，使用 **LangGraph** 编排 Agent 工具调用流程，并通过 **Django** 构建产品壳层，实现论文上传、知识库更新、聊天问答、历史会话保存、检索片段展示和 Agent Trace 展示。
+项目以本地 PDF 论文知识库为基础，围绕论文内容检索、证据片段回溯、基于上下文的回答生成、工具路由、上下文充分性检查和 Agent Trace 展示，构建一个可运行、可解释、可持续迭代的 AI 应用工程项目。
+
+系统使用 **FastAPI** 封装 AI 推理服务，使用 **LangGraph** 编排 Agent 工具调用流程，并通过 **Django** 构建产品壳层，实现论文上传、知识库更新、聊天问答、历史会话保存、Retrieved Context 展示和 Agent Trace 展示。
 
 当前版本已经形成一个完整的最小产品闭环：
 
 ```text
-上传论文 -> 重建知识库 -> 发起问答 -> Agent 选择工具 -> RAG 检索回答 -> 展示检索片段 -> 保存历史会话
+上传论文 -> 重建知识库 -> 发起问答 -> Agent 选择工具 -> RAG 检索回答 -> 展示检索片段 -> 展示 Agent Trace -> 保存历史会话
 ```
 
-项目目标不是构建大而全的 SaaS 平台，而是围绕 **论文检索 + Agent 编排 + Web 产品化展示** 构建一个结构清晰、可运行、可解释、的 AI 应用工程样例。
-
+项目目标不是构建大而全的科研 SaaS 平台，而是围绕 **论文检索 + Agent 编排 + Web 产品化展示 + 可解释执行过程** 构建一个结构清晰、可运行、可观察、可持续打磨的 AI 应用工程样例。
 
 
 ---
@@ -96,17 +97,38 @@ Django 产品壳层展示
 
 ### 3.2 Agent / LangGraph 能力
 
-- 使用 LangGraph 构建 Agent 工作流
-- 将 Agent 流程拆分为：
+当前系统使用 LangGraph 构建轻量级 Agent Workflow。早期流程是固定链路：
 
 ```text
 choose_tool -> execute_tool -> generate_answer
 ```
 
-- 使用 `AgentState` 显式传递中间状态
-- 支持 `decision`、`tool_result`、`retrieved_chunks`、`final_answer` 等状态字段
-- 支持返回 Agent Trace，包括工具选择、工具输入和工作流路径
-- 页面可展示本轮问答使用的工具和执行路径
+当前版本已经升级为带有条件分支和 fallback 的工作流：
+
+```text
+choose_tool
+    ↓
+execute_tool
+    ↓
+route_after_execute
+    ├── normal -> generate_answer
+    └── error / insufficient context -> llm_fallback -> generate_answer
+```
+
+当前 Agent / LangGraph 层已经支持：
+
+- 使用 `AgentState` 显式传递中间状态；
+- 使用 LLM Router 在运行时选择工具；
+- route decision 中包含 `tool`、`input` 和 `reason`；
+- 通过 `reason` 字段解释为什么选择某个工具；
+- 使用 LangGraph `add_conditional_edges` 实现条件边；
+- 工具执行失败后进入 `llm_fallback` 节点；
+- 对 RAG 检索结果进行 `context_sufficient` 检查；
+- 使用 `fallback_used` 标记本轮是否触发兜底；
+- 使用 `retry_count` 为后续 Reflection / retry 机制预留状态；
+- 返回并展示 Agent Trace，包括工具选择、路由理由、fallback 状态、上下文充分性和 workflow path。
+
+当前 Agent 设计不是完整 autonomous Agent，也不是完整 ReAct 实现，而是一个面向论文阅读场景的轻量级 Tool Calling + RAG + LangGraph Workflow 应用雏形。
 
 ### 3.3 工具调用能力
 
@@ -385,16 +407,22 @@ Django 上传页面支持查看当前知识库文件，并上传新的 PDF。上
 
 ### 7.2 Chat Page and Agent Trace
 
-聊天页面支持用户输入 `session_id` 和问题，并展示多轮对话消息、最近会话、本轮 Agent 的工具选择和 LangGraph 执行路径。
+聊天页面支持用户输入 `session_id` 和问题，并展示最近会话、本轮回答、Agent Trace 和 Retrieved Context。
 
-Agent Trace 中可以看到：
+当前 Agent Trace 中可以看到：
 
-- 本轮使用的工具
-- 工具输入
-- LangGraph 工作流路径
-- 路由决策原始信息
+- 本轮使用的工具；
+- 工具输入；
+- LLM Router 的选择理由；
+- 是否触发 fallback；
+- 当前 retrieved context 是否充分；
+- retry count；
+- LangGraph workflow path；
+- 原始 route decision 数据。
 
-![Chat Agent Trace](docs/images/chat_agent_trace.png)
+这使系统不只展示最终回答，也能展示 Agent 在本轮问答中的执行过程，便于调试工具路由、观察 fallback 状态，并向面试官解释 Agent Workflow 的运行路径。
+
+![Chat Home with Agent Trace](docs/images/chat_home_agent_trace_v2.png)
 
 ### 7.3 Conversation Answer
 
@@ -406,7 +434,16 @@ Agent Trace 中可以看到：
 
 对于论文相关问题，系统会展示 RAG 检索阶段命中的 Top-K 论文片段，用于说明回答依据，避免系统表现成完全黑盒的聊天机器人。
 
-![Retrieved Context](docs/images/retrieved_context.png)
+Retrieved Context 中会展示：
+
+- 命中的论文来源；
+- 相关文本片段；
+- 多个 Top-K 检索结果；
+- 支撑回答生成的上下文证据。
+
+这部分主要用于验证 RAG 检索是否命中正确论文内容，也为后续 RAG eval 提供人工观察依据。
+
+![Retrieved Context](docs/images/retrieved_context_v2.png)
 
 ### 7.5 Session History
 
@@ -541,29 +578,41 @@ Paper-RAG-Agent-with-LangGraph/
 ```json
 {
   "session_id": "demo-session",
-  "question": "What is the difference between paper1 and paper2?",
+  "question": "What is the difference between paper2 and paper3?",
   "answer": "...",
   "chunks": [
     {
       "source": "Paper1.pdf",
+      "text": "..."
+    },
+    {
+      "source": "Paper3.pdf",
       "text": "..."
     }
   ],
   "agent_trace": {
     "route_decision": {
       "tool": "rag",
-      "input": "What is the difference between paper1 and paper2?"
+      "input": "What is the difference between paper2 and paper3?",
+      "reason": "The question asks about the difference between specific papers, which requires retrieval from the local document store."
     },
     "tool_used": "rag",
-    "tool_input": "What is the difference between paper1 and paper2?",
+    "tool_input": "What is the difference between paper2 and paper3?",
+    "route_reason": "The question asks about the difference between specific papers, which requires retrieval from the local document store.",
+    "fallback_used": false,
+    "context_sufficient": true,
+    "retry_count": 0,
     "workflow": [
       "choose_tool",
       "execute_tool",
       "generate_answer"
-    ]
+    ],
+    "error": null
   }
 }
 ```
+
+其中 `agent_trace` 用于展示本轮 Agent Workflow 的执行过程，包括工具选择、工具输入、路由理由、fallback 状态、上下文充分性和工作流路径。
 
 ### 10.2 POST `/reload_kb`
 
@@ -858,51 +907,114 @@ Calculate 2 * (3 + 5)
 
 项目将不同职责拆分到不同层：
 
-- Django：产品壳层、页面展示、上传入口、历史会话持久化
-- FastAPI：AI 推理服务接口
-- LangGraph：Agent 工作流编排
-- Tools：工具注册与调用
-- RAGSystem：检索、rerank 和回答生成
-- SQLite：会话和消息存储
+- Django：产品壳层、页面展示、上传入口、历史会话持久化；
+- FastAPI：AI 推理服务接口；
+- LangGraph：Agent 工作流编排；
+- Tools：工具注册与调用；
+- RAGSystem：检索、rerank 和回答生成；
+- SQLite：会话和消息存储。
 
-### 14.2 Agent 流程可解释
+这种分层避免将 RAG / Agent / Web 展示逻辑全部堆在一个视图函数中，也方便后续替换前端、扩展工具或独立部署 AI 服务。
 
-系统不只返回最终回答，还能返回并展示：
+### 14.2 可解释 Agent Workflow
 
-- 本轮选择了哪个工具
-- 工具输入是什么
-- LangGraph 执行路径是什么
-- RAG 检索到了哪些论文片段
+系统不只返回最终回答，还能返回并展示 Agent 执行过程。
 
-这使得系统更适合调试、展示。
+当前 Agent Trace 包括：
 
-### 14.3 上传后动态更新知识库
+- 本轮选择了哪个工具；
+- 工具输入是什么；
+- LLM Router 为什么选择该工具；
+- 是否触发 fallback；
+- 当前上下文是否充分；
+- LangGraph workflow path；
+- 原始 route decision 数据。
+
+这使得系统更适合调试、展示和面试讲解。相比只展示最终答案的普通 RAG Demo，本项目可以进一步解释“为什么选择这个工具”“是否检索到了证据”“是否进入了兜底路径”。
+
+### 14.3 状态驱动的条件分支
+
+早期 Agent 流程更接近固定 pipeline：
+
+```text
+choose_tool -> execute_tool -> generate_answer
+```
+
+当前版本通过 LangGraph `add_conditional_edges` 增加了条件边，在 `execute_tool` 后根据 `AgentState` 中的 `error`、`fallback_used` 和 `context_sufficient` 判断下一步路径：
+
+```text
+execute_tool
+    ↓
+route_after_execute
+    ├── normal -> generate_answer
+    └── error / insufficient context -> llm_fallback -> generate_answer
+```
+
+这让 workflow 不再是完全固定链路，而是可以根据运行时状态进入不同分支。
+
+### 14.4 证据充分性检查
+
+RAG 系统中，检索到了 chunk 不代表上下文一定足够回答问题。
+
+当前系统加入了 `context_sufficient` 字段，用于判断 retrieved context 是否基本能够支撑回答。如果检索结果不足，系统会进入 fallback 或提示证据不足，避免模型在缺少依据时强行生成答案。
+
+当前判断逻辑仍然是轻量规则，后续会结合 RAG eval 问题集、retrieved chunk 命中情况和检索分数进一步优化。
+
+### 14.5 上传后动态更新知识库
 
 Django 上传论文后，会调用 FastAPI `/reload_kb`，重新加载本地 PDF、切分文档、构建向量索引，并同步重建 AgentWorkflow。
 
-这使系统具备了更接近真实产品的知识库更新能力。
+这使系统具备了更接近真实产品的知识库更新能力，而不是只能针对固定文档做静态问答。
 
-### 14.4 保留核心 AI 能力的独立性
+### 14.6 工具调用安全边界
+
+Agent 工具不是模型想调什么就直接执行什么，而是需要有明确输入边界和执行约束。
+
+例如 calculator 工具已经去掉裸 `eval`，改为更受限的表达式处理方式，避免工具执行层出现不必要的安全风险。
+
+### 14.7 保留核心 AI 能力的独立性
 
 Django 只负责产品壳层，不侵入 RAG / Agent / LangGraph 核心逻辑。
 
-这使项目结构更清晰，也方便后续替换前端、扩展工具或部署 AI 服务。
+核心 AI 能力集中在 FastAPI、LangGraph、Tools 和 RAGSystem 中，这使项目结构更清晰，也方便后续扩展为不同前端、不同工具或不同部署方式。
 
 ---
 
 ## 15. Future Work
 
-后续优化方向主要围绕工程可用性和展示完整度展开，而不是扩展成复杂 SaaS 平台：
+后续优化方向主要围绕 RAG 质量闭环、Agent 可观测性和工程可用性展开，而不是扩展成复杂 SaaS 平台。
 
-- [ ] 优化页面样式，使 Demo 截图更清晰
-- [ ] 增加更细粒度的文档管理，例如删除文档、查看文档状态
-- [ ] 增加轻量任务状态记录，例如上传时间、reload 结果、chunks 数量
-- [ ] 优化工具路由 Prompt，提高 `rag / web_search / llm` 的选择稳定性
-- [ ] 增加 RAG 评测脚本，记录不同 `top_k`、`rerank_k` 下的回答效果
-- [ ] 支持更清晰的多论文对比问答
-- [ ] 扩展更多 MCP 工具，例如学术搜索、文件系统或数据库查询
-- [ ] 增加部署说明，例如本地双服务启动、反向代理或 Docker 化
+### 15.1 RAG 质量闭环
 
+- [ ] 增加 `eval_questions.json`，构造小规模论文问答评估集；
+- [ ] 增加 `eval_run_result.md`，记录检索命中和回答依据；
+- [ ] 增加 `scripts/eval_rag.py`，输出 Top-K retrieved chunks；
+- [ ] 记录 expected keywords / expected answer points；
+- [ ] 对比不同 `chunk_size`、`overlap`、`top_k` 下的检索效果。
+
+### 15.2 Agent Trace v1.5 / v2
+
+- [ ] 统一 Agent Trace 字段；
+- [ ] 增加 `tool_status`；
+- [ ] 增加 `context_sufficient_reason`；
+- [ ] 增加 `retrieved_context_count`；
+- [ ] 后续在真实计时逻辑完成后再加入 `latency_ms`。
+
+### 15.3 工程化补强
+
+- [ ] 优化页面样式，使 Demo 截图更清晰；
+- [ ] 增加更细粒度的文档管理，例如删除文档、查看文档状态；
+- [ ] 增加轻量任务状态记录，例如上传时间、reload 结果、chunks 数量；
+- [ ] 支持 SSE Streaming 输出；
+- [ ] 增加 Docker 部署说明；
+- [ ] 探索 `/reload_kb` 后台化，避免大文件上传时阻塞。
+
+### 15.4 Agent 能力扩展
+
+- [ ] 增加 Reflection Node 初版；
+- [ ] 限制 Reflection retry 次数，避免无限循环；
+- [ ] 支持 query rewrite 后重新检索；
+- [ ] 扩展更多 MCP 工具，例如学术搜索、文件系统或数据库查询。
 ---
 
 ## 16. Notes

@@ -68,6 +68,7 @@ def ask_question(req: QueryRequest):
             "tool_input": tool_result.get("tool_input", ""),
             "fallback_used": result.get("fallback_used", False),
             "context_sufficient": result.get("context_sufficient"),
+            "context_metrics": result.get("context_metrics", {}),
             "error": result.get("error", ""),
             "retry_count": result.get("retry_count", 0),
             "workflow": result.get(

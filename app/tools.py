@@ -10,10 +10,6 @@ from app.config import (
 )
 
 
-#
-# def rag_tool(query, rag: RAGSystem, chat_history=None):
-#     return rag.ask(query, chat_history=chat_history)
-
 def rag_tool(query, rag: RAGSystem, chat_history=None):
     return rag.ask_with_trace(query, chat_history=chat_history)
 

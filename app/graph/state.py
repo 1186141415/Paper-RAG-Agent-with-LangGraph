@@ -39,6 +39,10 @@ class AgentState(TypedDict, total=False):
     # RAG 检索到的上下文是否足够支撑回答
     context_sufficient: bool
 
+    # context sufficiency 的轻量判断指标
+    # 例如 best_distance / avg_top_distance / threshold / reason
+    context_metrics: dict[str, Any]
+
     # 是否使用过 LLM fallback
     fallback_used: bool
 

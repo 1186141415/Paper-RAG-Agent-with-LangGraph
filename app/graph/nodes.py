@@ -207,10 +207,6 @@ def build_execute_tool_node(tools: list[dict[str, Any]], rag=None):
 
             logger.info(f"[execute_tool_node] tool_name: {tool_name}, tool_input: {tool_input}")
 
-            # 测试代码
-            #if "force_tool_error" in tool_input:
-            #    raise RuntimeError("Forced tool error for fallback test")
-
             for t in tools:
                 if t["name"] == tool_name:
                     if tool_name == "rag":
@@ -339,6 +335,7 @@ def generate_answer_node(state: AgentState) -> AgentState:
             "final_answer": f"系统执行过程中出现问题：{state['error']}",
             "retrieved_chunks": state.get("retrieved_chunks", []),
             "context_sufficient": state.get("context_sufficient"),
+            "context_metrics": state.get("context_metrics", {}),
             "workflow_path": workflow_path
         }
 
@@ -352,6 +349,7 @@ def generate_answer_node(state: AgentState) -> AgentState:
             "final_answer": output.get("answer", ""),
             "retrieved_chunks": output.get("retrieved_chunks", []),
             "context_sufficient": output.get("context_sufficient"),
+            "context_metrics": output.get("context_metrics", {}),
             "workflow_path": workflow_path
         }
 
@@ -359,5 +357,6 @@ def generate_answer_node(state: AgentState) -> AgentState:
         "final_answer": str(output),
         "retrieved_chunks": [],
         "context_sufficient": state.get("context_sufficient"),
+        "context_metrics": state.get("context_metrics", {}),
         "workflow_path": workflow_path
     }

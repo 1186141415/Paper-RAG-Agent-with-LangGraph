@@ -207,10 +207,6 @@ def build_execute_tool_node(tools: list[dict[str, Any]], rag=None):
 
             logger.info(f"[execute_tool_node] tool_name: {tool_name}, tool_input: {tool_input}")
 
-            # 测试代码
-            #if "force_tool_error" in tool_input:
-            #    raise RuntimeError("Forced tool error for fallback test")
-
             for t in tools:
                 if t["name"] == tool_name:
                     if tool_name == "rag":

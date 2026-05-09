@@ -1077,11 +1077,39 @@ Django 只负责产品壳层,不侵入 RAG / Agent / LangGraph 核心逻辑。
 
 ---
 
-## 15. Future Work
+## 15. Evaluation
+
+为了验证系统在不同类型论文问答任务中的表现，我构建了一组包含 22 个问题的评测集，覆盖三类典型问题：
+
+- BROAD：论文整体理解类问题，例如主要贡献、研究动机、方法概述；
+- SPECIFIC：具体事实查询类问题，例如数据集、指标、消融实验、是否提到某项技术；
+- COMPARISON：多论文对比类问题，例如两篇论文方法差异、性能对比、研究问题是否相同。
+
+本轮评测对比了 `top_k=20` 与 `top_k=40` 两种 FAISS 召回规模，并保持 LLM rerank、问题类型判断和证据充分性判断逻辑不变。
+
+### 15.1 关键结果
+
+- Agent 工具路由表现稳定：两轮共 44 次问题测试中，全部正确路由到 RAG 工具；
+- LLM rerank 解析稳定：两轮测试中均未触发 rerank fallback；
+- FAISS 距离门无法单独判断上下文是否充分：22 个问题全部通过 distance gate，说明向量距离更适合作为粗粒度过滤信号，而不是最终证据判断依据；
+- `top_k` 从 20 增加到 40 后，确实额外召回到了一个 Paper2 的有效片段，但最终 context sufficient 数量没有提升；
+- 当前主要瓶颈不是简单的召回数量不足，而是同领域多篇论文混合检索时容易出现跨论文 chunk 混淆；
+- 后续优化方向包括：基于 source 元数据的检索过滤、按论文建立独立索引、或结合关键词与向量检索的 hybrid retrieval。
+
+### 15.2 当前结论
+
+本轮评测说明，单纯增大 `top_k` 并不能稳定解决多论文 RAG 场景中的检索混淆问题。  
+在多篇论文主题相近的情况下，FAISS 容易返回语义相近但来源错误的片段，导致 SPECIFIC 和 COMPARISON 类问题难以获得可靠证据。
+
+因此，当前系统默认仍保持 `top_k=20`，后续优先从检索结构上优化，例如引入论文来源 metadata、按论文分片检索，或在问题明确提到 Paper1 / Paper2 时先进行 source-aware filtering。
+
+---
+
+## 16. Future Work
 
 后续优化方向主要围绕 RAG 质量闭环、Agent 可观测性和工程可用性展开,而不是扩展成复杂 SaaS 平台。
 
-### 15.1 RAG 质量闭环
+### 16.1 RAG 质量闭环
 
 - [ ] 增加 `eval_questions.json`,构造覆盖 BROAD / SPECIFIC / COMPARISON 三类的小规模评估集
 - [ ] 增加 `eval_run_result.md`,记录检索命中和回答依据
@@ -1090,14 +1118,14 @@ Django 只负责产品壳层,不侵入 RAG / Agent / LangGraph 核心逻辑。
 - [ ] 对比不同 `chunk_size`、`overlap`、`top_k` 下的检索效果
 - [ ] 基于评估集回调,调优 distance gate 的两个阈值
 
-### 15.2 Agent Trace v1.5 / v2
+### 16.2 Agent Trace v1.5 / v2
 
 - [ ] 进一步统一 Agent Trace 字段
 - [ ] 增加 `tool_status`
 - [ ] 增加 `retrieved_context_count`
 - [ ] 后续在真实计时逻辑完成后再加入 `latency_ms`(节点级)
 
-### 15.3 工程化补强
+### 16.3 工程化补强
 
 - [ ] 优化页面样式,使 Demo 截图更清晰
 - [ ] 增加更细粒度的文档管理,例如删除文档、查看文档状态
@@ -1106,7 +1134,7 @@ Django 只负责产品壳层,不侵入 RAG / Agent / LangGraph 核心逻辑。
 - [ ] 增加 Docker 部署说明
 - [ ] 探索 `/reload_kb` 后台化,避免大文件上传时阻塞
 
-### 15.4 Agent 能力扩展
+### 16.4 Agent 能力扩展
 
 - [ ] 增加 Reflection Node 初版,基于 `retry_count` 字段
 - [ ] 限制 Reflection retry 次数,避免无限循环
@@ -1116,7 +1144,7 @@ Django 只负责产品壳层,不侵入 RAG / Agent / LangGraph 核心逻辑。
 
 ---
 
-## 16. Notes
+## 17. Notes
 
 - 当前版本强调的是工程化闭环,而不是一次性做完所有能力
 - README 内容以当前真实实现为准,后续随着功能扩展持续更新
@@ -1124,6 +1152,6 @@ Django 只负责产品壳层,不侵入 RAG / Agent / LangGraph 核心逻辑。
 
 ---
 
-## 17. License
+## 18. License
 
 This project is for learning, experimentation, and engineering practice.

@@ -134,10 +134,12 @@ def build_choose_tool_node(tools: list[dict[str, Any]]):
                     {tool_desc}
             
                     Tool selection guidance:
-                    - Use rag for questions about the loaded local papers/documents, such as paper1, paper2, this paper, the PDF, or document-based comparison/analysis.
+                    - Use rag for questions about the loaded local papers/documents, such as paper1, paper2, this paper, 
+                      the PDF, or document-based comparison/analysis.
                     - Use calculator for clear math calculations.
                     - Use time for current time questions.
-                    - Use web_search for questions that explicitly need web information, latest information, recent updates, current events, online search, or information likely not contained in the local PDFs.
+                    - Use web_search for questions that explicitly need web information, latest information, recent updates, 
+                      current events, online search, or information likely not contained in the local PDFs.
                     - Use llm for general questions that do not need document retrieval, calculation, time, or web search.
             
                     Rules:

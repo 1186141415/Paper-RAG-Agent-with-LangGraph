@@ -1,0 +1,156 @@
+[
+  {
+    "id": "q001",
+    "question": "What is the main contribution of Paper1?",
+    "type": "BROAD",
+    "expected_keywords": ["contribution", "propose", "method", "approach"],
+    "expected_source": "Paper1.pdf"
+  },
+  {
+    "id": "q002",
+    "question": "What problem does Paper1 try to solve?",
+    "type": "BROAD",
+    "expected_keywords": ["problem", "challenge", "limitation", "motivation"],
+    "expected_source": "Paper1.pdf"
+  },
+  {
+    "id": "q003",
+    "question": "Summarize the main findings of Paper2.",
+    "type": "BROAD",
+    "expected_keywords": ["result", "finding", "show", "demonstrate"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q004",
+    "question": "What is the research motivation behind Paper2?",
+    "type": "BROAD",
+    "expected_keywords": ["motivation", "research", "gap", "need"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q005",
+    "question": "What methodology does Paper1 use?",
+    "type": "BROAD",
+    "expected_keywords": ["method", "approach", "framework", "model"],
+    "expected_source": "Paper1.pdf"
+  },
+  {
+    "id": "q006",
+    "question": "What datasets were used in the experiments of Paper1?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["dataset", "data", "experiment", "evaluation"],
+    "expected_source": "Paper1.pdf"
+  },
+  {
+    "id": "q007",
+    "question": "What evaluation metrics are reported in Paper2?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["metric", "accuracy", "performance", "score", "F1"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q008",
+    "question": "What is the difference between Paper1 and Paper2?",
+    "type": "COMPARISON",
+    "expected_keywords": ["difference", "compare", "whereas", "in contrast"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q009",
+    "question": "Which method performs better, the one in Paper1 or Paper2?",
+    "type": "COMPARISON",
+    "expected_keywords": ["better", "outperform", "superior", "compare"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q010",
+    "question": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+    "type": "COMPARISON",
+    "expected_keywords": ["complementary", "competing", "similar", "different"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q011",
+    "question": "What are the key limitations discussed in Paper1?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["limitation", "future work", "drawback", "weakness"],
+    "expected_source": "Paper1.pdf"
+  },
+  {
+    "id": "q012",
+    "question": "Does Paper2 propose a novel architecture? Describe it.",
+    "type": "SPECIFIC",
+    "expected_keywords": ["architecture", "novel", "design", "structure"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q013",
+    "question": "How does Paper1 handle the cold-start problem?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["cold-start", "initialization", "warm-up"],
+    "expected_source": "Paper1.pdf"
+  },
+  {
+    "id": "q014",
+    "question": "Does Paper1 mention quantum computing?",
+    "type": "SPECIFIC",
+    "expected_keywords": [],
+    "expected_source": ""
+  },
+  {
+    "id": "q015",
+    "question": "Does Paper2 discuss transformer architectures in detail?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["transformer", "attention", "encoder", "decoder"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q016",
+    "question": "What is the core theoretical foundation behind the approach in Paper1?",
+    "type": "BROAD",
+    "expected_keywords": ["theory", "foundation", "principle", "based on"],
+    "expected_source": "Paper1.pdf"
+  },
+  {
+    "id": "q017",
+    "question": "What ablation studies are conducted in Paper2?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["ablation", "remove", "component", "variant"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q018",
+    "question": "How does Paper2 compare its results against baselines?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["baseline", "compare", "outperform", "improvement"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q019",
+    "question": "What are the shared assumptions between Paper1 and Paper2?",
+    "type": "COMPARISON",
+    "expected_keywords": ["assume", "assumption", "common", "share", "both"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q020",
+    "question": "Do Paper1 and Paper2 address the same research problem?",
+    "type": "COMPARISON",
+    "expected_keywords": ["same", "problem", "research", "address", "focus"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q021",
+    "question": "What future research directions does Paper2 suggest?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["future work", "direction", "extend", "explore"],
+    "expected_source": "Paper2.pdf"
+  },
+  {
+    "id": "q022",
+    "question": "Does Paper1 use reinforcement learning?",
+    "type": "SPECIFIC",
+    "expected_keywords": ["reinforcement learning", "RL", "reward", "policy"],
+    "expected_source": "Paper1.pdf"
+  }
+]

@@ -23,3 +23,11 @@ MCP_SEARCH_LOCATION = os.getenv('MCP_SEARCH_LOCATION', 'us')
 CHAT_MODEL = os.getenv('CHAT_MODEL', 'deepseek-chat')
 EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'text-embedding-3-small')
 DATA_DIR = os.getenv('DATA_DIR', 'data')
+
+
+VECTOR_STORE = os.getenv("VECTOR_STORE", "faiss").lower()
+
+# 注意：不要命名为 MILVUS_URI，避免和 pymilvus 内部配置冲突
+MILVUS_LITE_URI = os.getenv("MILVUS_LITE_URI", "./milvus_demo.db")
+MILVUS_COLLECTION_NAME = os.getenv("MILVUS_COLLECTION_NAME", "paper_rag_chunks")
+MILVUS_METRIC_TYPE = os.getenv("MILVUS_METRIC_TYPE", "L2")

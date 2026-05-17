@@ -1,6 +1,5 @@
-import faiss
 from app.llm_utils import client, get_embedding
-import numpy as np
+from app.vector_store.factory import create_vector_store
 
 from app.config import (
     CHAT_MODEL
@@ -23,61 +22,17 @@ RELEVANCE_GATE_PREVIEW_CHUNKS = 5
 
 
 class RAGSystem:
-    def __init__(self, chunks, top_k=20, rerank_k=10):
+    def __init__(self, chunks, top_k=20, rerank_k=10, vector_store=None):
         self.chunks = chunks
         self.top_k = top_k
         self.rerank_k = rerank_k
-        self.index = None
-        self.embeddings = None
+        self.vector_store = vector_store or create_vector_store()
 
     def build_index(self):
-        texts = [c["text"] for c in self.chunks]
-
-        if self.embeddings is None:  # 加缓存避免重复计算消耗API
-            embeddings = [get_embedding(t) for t in texts]
-            self.embeddings = np.vstack(embeddings)
-
-        dim = self.embeddings.shape[1]
-        self.index = faiss.IndexFlatL2(dim)
-        self.index.add(self.embeddings)
+        self.vector_store.build(self.chunks)
 
     def retrieve(self, query, k=5):
-        if self.index is None:
-            raise RuntimeError("FAISS index has not been built.")
-
-        if not self.chunks:
-            logger.warning("[retrieve] no chunks available in RAGSystem")
-            return []
-
-        k = min(k, len(self.chunks))
-
-        query_vec = get_embedding(query).reshape(1, -1)
-        distances, indices = self.index.search(query_vec, k)
-
-        results = []
-
-        for rank, (idx, distance) in enumerate(zip(indices[0], distances[0]), start=1):
-            idx = int(idx)
-
-            if idx < 0 or idx >= len(self.chunks):
-                continue
-
-            chunk = dict(self.chunks[idx])
-            chunk["distance"] = float(distance)
-            chunk["retrieval_rank"] = rank
-
-            results.append(chunk)
-
-        if results:
-            best_distance = min(c["distance"] for c in results)
-            logger.info(
-                f"[retrieve] query='{query}', returned={len(results)}, "
-                f"best_distance={best_distance:.4f}"
-            )
-        else:
-            logger.warning(f"[retrieve] query='{query}', no valid chunks returned")
-
-        return results
+        return self.vector_store.search(query, k)
 
     def assess_context_sufficiency(self, retrieved_chunks):
         """
@@ -423,7 +378,6 @@ class RAGSystem:
                 return fallback_indices, rerank_trace
 
             return fallback_indices
-
 
     def ask_with_trace(self, question, chat_history=None):
         if chat_history is None:

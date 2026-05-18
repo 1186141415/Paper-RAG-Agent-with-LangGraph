@@ -32,11 +32,10 @@ def upload_page(request):
                     message = f"File uploaded: {file.name}"
 
                     import requests
-                    FASTAPI_URL = "http://127.0.0.1:8000"
 
                     try:
                         response = requests.post(
-                            f"{FASTAPI_URL}/reload_kb",
+                            f"{settings.FASTAPI_BASE_URL}/reload_kb",
                             timeout=(5, 180)
                         )
 
@@ -59,7 +58,7 @@ def upload_page(request):
                     except requests.exceptions.ConnectionError:
                         error = (
                             "File uploaded, but Django could not connect to FastAPI. "
-                            "Please make sure FastAPI is running at http://127.0.0.1:8000."
+                            f"Please make sure FastAPI is running at {settings.FASTAPI_BASE_URL}."
                         )
 
                     except Exception as e:

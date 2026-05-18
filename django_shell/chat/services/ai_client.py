@@ -1,11 +1,10 @@
 import requests
-
-FASTAPI_BASE_URL = "http://127.0.0.1:8000"
+from django.conf import settings
 
 
 def ask_ai(session_id: str, question: str) -> dict:
     resp = requests.post(
-        f"{FASTAPI_BASE_URL}/ask",
+        f"{settings.FASTAPI_BASE_URL}/ask",
         json={
             "session_id": session_id,
             "question": question,

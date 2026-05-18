@@ -785,6 +785,9 @@ Upload Papers:    http://127.0.0.1:8001/documents/upload/
 Session History:  http://127.0.0.1:8001/sessions/
 ```
 
+Django 通过 `settings.FASTAPI_BASE_URL` 连接 FastAPI 推理服务,默认值为 `http://127.0.0.1:8000`。
+若 FastAPI 运行在其他地址或端口,可在启动 Django 前设置环境变量 `FASTAPI_BASE_URL`,无需修改业务代码。
+
 ---
 
 ## 12. Startup Self-Check

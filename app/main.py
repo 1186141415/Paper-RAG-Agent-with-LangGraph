@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -12,37 +14,46 @@ from app.graph.workflow import AgentWorkflow
 
 logger = setup_logger()
 
-app = FastAPI()
-
 session_manager = SessionManager(max_turns=3)
 
 rag = None
 workflow = None
 
 
-class QueryRequest(BaseModel):
-    session_id: str
-    question: str
-
-
-@app.on_event("startup")
-def startup_event():
+def _init_rag_and_workflow() -> tuple[int, int]:
+    """Load PDFs, build RAG index, and initialize AgentWorkflow. Return (total_docs, total_chunks)."""
     global rag, workflow
 
     logger.info("Loading RAG system...")
 
     docs = load_pdfs(DATA_DIR)
-    logger.info(f"docs数量: {len(docs)}")
+    logger.info(f"docs count: {len(docs)}")
 
     chunks = process_documents(docs)
-    logger.info(f"chunks数量: {len(chunks)}")
+    logger.info(f"chunks count: {len(chunks)}")
 
     rag = RAGSystem(chunks)
     rag.build_index()
 
-    workflow = AgentWorkflow(TOOLS, rag=rag)  # 初始化编排层
+    workflow = AgentWorkflow(TOOLS, rag=rag)
 
     logger.info("RAG + LangGraph ready!")
+    return len(docs), len(chunks)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    _init_rag_and_workflow()
+    yield
+    logger.info("FastAPI lifespan shutdown.")
+
+
+app = FastAPI(lifespan=lifespan)
+
+
+class QueryRequest(BaseModel):
+    session_id: str
+    question: str
 
 
 @app.post("/ask")
@@ -107,27 +118,16 @@ def clear_session(session_id: str):
 
 @app.post("/reload_kb")
 def reload_kb():
-    global rag, workflow
-
     logger.info("Reloading knowledge base...")
     print("🔄 Reloading knowledge base...")
 
-    docs = load_pdfs(DATA_DIR)
-    logger.info(f"docs数量: {len(docs)}")
-
-    chunks = process_documents(docs)
-    logger.info(f"chunks数量: {len(chunks)}")
-
-    rag = RAGSystem(chunks)
-    rag.build_index()
-
-    workflow = AgentWorkflow(TOOLS, rag=rag)
+    total_docs, total_chunks = _init_rag_and_workflow()
 
     logger.info("Knowledge base and AgentWorkflow reloaded successfully.")
 
     return {
         "status": "success",
-        "message": f"Knowledge base reloaded. Total chunks: {len(chunks)}",
-        "total_docs": len(docs),
-        "total_chunks": len(chunks),
+        "message": f"Knowledge base reloaded. Total chunks: {total_chunks}",
+        "total_docs": total_docs,
+        "total_chunks": total_chunks,
     }

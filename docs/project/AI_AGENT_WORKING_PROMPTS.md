@@ -7,9 +7,9 @@
 每次开始一个新任务时，先让 AI 读取：
 
 1. README.md
-2. PROJECT_CONTEXT.md
+2. docs/project/PROJECT_CONTEXT.md
 3. AGENTS.md
-4. PRODUCT_VISION.md
+4. docs/project/PRODUCT_VISION.md
 5. 当前任务相关代码文件
 
 然后再让 AI 输出分析和计划。
@@ -23,9 +23,9 @@
 请先阅读以下文件：
 
 - README.md
-- PROJECT_CONTEXT.md
+- docs/project/PROJECT_CONTEXT.md
 - AGENTS.md
-- PRODUCT_VISION.md
+- docs/project/PRODUCT_VISION.md
 
 阅读后，请先不要直接改代码。
 
@@ -119,9 +119,9 @@
 
 开始前请阅读：
 
-- PROJECT_CONTEXT.md
+- docs/project/PROJECT_CONTEXT.md
 - AGENTS.md
-- PRODUCT_VISION.md
+- docs/project/PRODUCT_VISION.md
 
 任务要求：
 
@@ -146,9 +146,9 @@
 
 请先阅读：
 
-- PROJECT_CONTEXT.md
+- docs/project/PROJECT_CONTEXT.md
 - AGENTS.md
-- PRODUCT_VISION.md
+- docs/project/PRODUCT_VISION.md
 
 然后输出：
 
@@ -243,9 +243,9 @@
 ### P1：RAG 质量提升
 
 - source-aware retrieval
-- eval_questions.json
+- docs/eval/eval_questions.json
 - scripts/eval_rag.py
-- eval_run_result.md
+- docs/eval/eval_run_result_top_k20.md
 - hybrid retrieval 最小版本
 - rerank 前后对比记录
 

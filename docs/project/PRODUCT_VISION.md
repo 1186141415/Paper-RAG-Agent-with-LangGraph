@@ -235,7 +235,7 @@ PaperPilot 不应该停留在“聊天框问答”。
 优先任务：
 
 1. source-aware retrieval
-2. eval_questions.json + eval 脚本
+2. `docs/eval/eval_questions.json` + eval 脚本
 3. Agent Trace 页面优化
 4. embedding 缓存
 5. FastAPI lifespan 与状态管理优化

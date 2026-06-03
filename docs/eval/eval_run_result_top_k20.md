@@ -25,7 +25,7 @@ The previous run (2026-05-03, 4 questions) identified that the old LLM relevance
 - **Typed LLM relevance gate**: classifies question as BROAD / SPECIFIC / COMPARISON, applies different judgment criteria per type
 - **BROAD soft warning**: when LLM gate returns NO for a BROAD question, the result is downgraded to a soft warning and the distance gate result is used instead
 - **SPECIFIC / COMPARISON**: LLM gate NO is a hard block
-- **Eval questions**: 22 questions from `eval_questions.json` (6 BROAD, 11 SPECIFIC, 5 COMPARISON)
+- **Eval questions**: 22 questions from `docs/eval/eval_questions.json` (6 BROAD, 11 SPECIFIC, 5 COMPARISON)
 - **Each question uses a unique `session_id`** (`eval-q001` through `eval-q022`) to avoid cross-question chat history contamination
 
 ---

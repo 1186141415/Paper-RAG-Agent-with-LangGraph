@@ -19,8 +19,8 @@
 > 本文档说明：PaperPilot **当前不是**生产级 SaaS，也**不必**为了“像 SaaS”而推翻现有轻量架构。  
 > 它描述的是：在保持当前 **FastAPI AI Engine + Django 产品壳层** 可运行、可演示、可迭代的前提下，如何**逐步**演进为面向高校科研场景的 SaaS 化 AI Agent / RAG 平台。
 >
-> 与 `PRODUCT_VISION.md`（产品愿景）、`PROJECT_CONTEXT.md`（代码契约与技术债）、`AI_AGENT_WORKING_PROMPTS.md`（协作节奏）配套阅读。  
-> 出现冲突时：**数据契约与运行中的代码** 以 `PROJECT_CONTEXT.md` 为准；**阶段优先级** 以本文 + `PRODUCT_VISION.md` 为准。
+> 与 `docs/project/PRODUCT_VISION.md`（产品愿景）、`docs/project/PROJECT_CONTEXT.md`（代码契约与技术债）、`docs/project/AI_AGENT_WORKING_PROMPTS.md`（协作节奏）配套阅读。  
+> 出现冲突时：**数据契约与运行中的代码** 以 `docs/project/PROJECT_CONTEXT.md` 为准；**阶段优先级** 以本文 + `docs/project/PRODUCT_VISION.md` 为准。
 
 ---
 
@@ -135,7 +135,7 @@ User → Django（页面、上传、SQLite 历史）
 | P0 | `DATA_DIR` 等路径在 config 单点绝对化 | 消除 Django / FastAPI cwd 耦合 |
 | P0 | `/health` | 可探测、部署自检 |
 | P0 | **Django→FastAPI 传 `chat_history`：P0 最小修复**（`/ask` 请求体必带最近 N 轮；FastAPI 以请求体为准写回 SessionManager） | 修复会话双写：FastAPI 重启后 Django 页面历史与推理上下文一致 |
-| P1 | `eval_questions.json` + `scripts/eval_rag.py` + 结果记录 | RAG 改动可回归 |
+| P1 | `docs/eval/eval_questions.json` + `scripts/eval_rag.py` + 结果记录 | RAG 改动可回归 |
 | P1 | source-aware retrieval 最小版 | 缓解多论文 source 混淆（产品核心痛点） |
 | P1 | Embedding 批处理 + 磁盘缓存（或修正 README 表述） | 降低 reload 成本与 API 费用 |
 | P1 | Agent Trace 字段小步统一（如 `tool_status`） | 试用者调试体验 |
@@ -271,7 +271,7 @@ User → Django（页面、上传、SQLite 历史）
 3. **先产品边界，后中间件**：先定义 Project 里有什么数据，再选 Milvus collection 策略。
 4. **证据链不降级**：SaaS 化不得削弱证据门、拒答与 Trace。
 5. **评测驱动 RAG**：换 embedding、向量库（含 FAISS → Milvus Server）、`top_k` 必须跑 eval 回归；**距离门阈值禁止跨后端直接沿用**。
-6. **文档同步**：阶段切换时更新 README、`PROJECT_CONTEXT.md`、本文 Stage 勾选状态。
+6. **文档同步**：阶段切换时更新 README、`docs/project/PROJECT_CONTEXT.md`、本文 Stage 勾选状态。
 7. **服从 TL;DR 与 WARNING**：未明确要求时，只做 Stage 0 → Stage 1 项。
 
 ---
@@ -290,11 +290,11 @@ User → Django（页面、上传、SQLite 历史）
 
 | 文档 | 关系 |
 |---|---|
-| `PRODUCT_VISION.md` | 产品愿景与用户场景 |
-| `PROJECT_CONTEXT.md` | 代码结构、数据契约、当前技术债 |
-| `AGENTS.md` | Agent 每轮必守红线 |
-| `AI_AGENT_WORKING_PROMPTS.md` | 任务格式与推荐队列 |
-| `README.md` | 对外介绍与 Quick Start |
+| `docs/project/PRODUCT_VISION.md` | 产品愿景与用户场景 |
+| `docs/project/PROJECT_CONTEXT.md` | 代码结构、数据契约、当前技术债 |
+| `AGENTS.md`（根目录） | Agent 每轮必守红线 |
+| `docs/project/AI_AGENT_WORKING_PROMPTS.md` | 任务格式与推荐队列 |
+| `README.md`（根目录） | 对外介绍与 Quick Start |
 
 ---
 

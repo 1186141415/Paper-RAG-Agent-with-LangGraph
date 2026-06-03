@@ -573,9 +573,22 @@ Paper-RAG-Agent-with-LangGraph/
 │  ├─ smoke_test_state.py
 │  ├─ smoke_test_tools_with_mcp.py
 │  └─ smoke_test_web_search_tool.py
+├─ docs/
+│  ├─ project/                         # 架构说明、产品愿景、SaaS 路线、AI 协作提示词
+│  │  ├─ PROJECT_CONTEXT.md
+│  │  ├─ PRODUCT_VISION.md
+│  │  ├─ SAAS_ROADMAP.md
+│  │  └─ AI_AGENT_WORKING_PROMPTS.md
+│  └─ eval/                            # RAG 评测集与结果记录
+│     ├─ eval_questions.json
+│     ├─ eval_run_result_top_k20.md
+│     └─ eval_run_result_top_k40.md
+├─ AGENTS.md                           # AI Agent 每轮必看精简约定（仓库根目录）
 ├─ requirements.txt
 └─ README.md
 ```
+
+更长的项目文档见 `docs/project/` 与 `docs/eval/`；重构或让 AI 改代码前请先读根目录 `AGENTS.md` 与 `docs/project/PROJECT_CONTEXT.md`。
 
 ---
 
@@ -1196,8 +1209,8 @@ Django 只负责产品壳层,不侵入 RAG / Agent / LangGraph 核心逻辑。
 
 ### 16.1 RAG 质量闭环
 
-- [ ] 增加 `eval_questions.json`,构造覆盖 BROAD / SPECIFIC / COMPARISON 三类的小规模评估集
-- [ ] 增加 `eval_run_result.md`,记录检索命中和回答依据
+- [ ] 增加 `docs/eval/eval_questions.json`,构造覆盖 BROAD / SPECIFIC / COMPARISON 三类的小规模评估集
+- [ ] 增加 `docs/eval/eval_run_result_top_k20.md` / `eval_run_result_top_k40.md`,记录检索命中和回答依据
 - [ ] 增加 `scripts/eval_rag.py`,输出 Top-K retrieved chunks
 - [ ] 记录 expected keywords / expected answer points
 - [ ] 对比不同 `chunk_size`、`overlap`、`top_k` 下的检索效果

@@ -111,10 +111,10 @@ Paper-RAG-Agent-with-LangGraph/
 
 ## 4. 模块职责清单（file-by-file）
 
-- **app/main.py** — FastAPI 应用。`@app.on_event("startup")` 在启动时加载 PDF、构建 `RAGSystem` 并初始化 `AgentWorkflow`。模块级全局变量 `rag` / `workflow` 在 `/reload_kb` 时被重新赋值。⚠️ `on_event` 已废弃（见技术债），全局可变状态也不是 thread-safe。
+- **app/main.py** — FastAPI 应用。`lifespan` async context manager 在启动时加载 PDF、构建 `RAGSystem` 并初始化 `AgentWorkflow`，依赖统一挂在 `app.state`（`rag` / `workflow` / `session_manager`）。`/reload_kb` 重新构建后**原子替换** `app.state.rag` / `app.state.workflow`；各端点通过 `Request` 取依赖，已无模块级全局可变状态。
 - **app/config.py** — 所有配置来源。新增配置项请加在这里，不要在业务代码里散落 `os.getenv`。
 - **app/data_loader.py** — `load_pdfs` / `load_documents` / `process_documents` / `split_text` / `clean_text`。切分是**字符级**（不是 token 级），默认 700/120，针对英文论文调过。
-- **app/llm_utils.py** — `client`（DeepSeek，chat）+ `client2`（embedding，独立 base_url）+ `get_embedding(text)`（3 次重试、sleep 2s）。⚠️ embedding 是逐条调用，无 batch，无持久化缓存。
+- **app/llm_utils.py** — `client`（DeepSeek，chat）+ `client2`（embedding，独立 base_url）+ `get_embedding(text)`（单条，3 次重试、sleep 2s，默认不缓存）+ `get_embeddings(texts)`（批量 + 磁盘缓存，按 `EMBEDDING_BATCH_SIZE` 分批，批量失败自动降级逐条）。构建索引走 `get_embeddings`，检索 query 走单条 `get_embedding`。
 - **app/logger_config.py** — `setup_logger()` 返回名为 `"rag_agent"` 的 logger。所有模块统一用它。
 - **app/rag_system.py** — 见 §6.3。核心方法：`build_index` / `retrieve` / `rerank` / `assess_context_sufficiency` / `assess_context_relevance_with_llm` / `ask_with_trace`。
 - **app/session_manager.py** — `SessionManager(max_turns=3)`，`get_history / append_turn / trim_history / clear_session`，纯内存 dict。
@@ -282,12 +282,11 @@ retrieve(top_k=20)
    - 后果：FastAPI 重启后多轮上下文丢失，但 Django 页面仍显示完整历史，二者会 diverge。
    - 重构方向：统一会话来源（让 FastAPI 从持久层读历史，或让 Django 把历史随请求传入），并支持多 worker。
 
-2. **FastAPI 启动钩子已废弃** — `@app.on_event("startup")` 应迁移到 `lifespan` async context manager。
+2. ~~**FastAPI 启动钩子已废弃**~~ —（✅ 已解决）`on_event` 已迁移到 `lifespan` async context manager（见 `app/main.py`）。
 
-3. **模块级全局可变状态** — `main.py` 的 `rag` / `workflow` 全局变量在 `/reload_kb` 时整体替换，非 thread-safe，且单 worker reload 不会传播到其它 worker。重构方向：依赖注入 / app.state / 单例管理。
+3. ~~**模块级全局可变状态**~~ —（✅ 已解决）`rag` / `workflow` / `session_manager` 已迁移到 `app.state`，端点经 `Request` 获取，`/reload_kb` 原子替换引用。⚠️ 多 worker 间仍各自构建、不共享，留待引入共享存储时处理。
 
-4. **Embedding 无批处理、无缓存** — `[get_embedding(t) for t in texts]` 逐条打 API，大文档集很慢。
-   - ⚠️ **文档/代码不一致**：README 3.1 / 9 声称「首次构建后缓存，避免重复消耗 API」，但当前代码每次 `build` / `reload_kb` 都重算，没有看到缓存实现。重构时要么补缓存，要么修正 README。
+4. ~~**Embedding 无批处理、无缓存**~~ —（✅ 已解决）新增 `get_embeddings(texts)`：按 `EMBEDDING_BATCH_SIZE` 批量请求 + 按 `sha256(EMBEDDING_MODEL + text)` 磁盘缓存（`EMBEDDING_CACHE_PATH`，默认 `.embedding_cache/embeddings.json`，已 gitignore），批量调用失败自动降级逐条。`faiss` / `milvus` 的 `build` 已改用它；检索 query 仍走单条 `get_embedding`。README「构建后缓存」描述现已与代码一致。
 
 5. **单次 RAG 问答的 LLM 调用次数偏多** — router(1) + rerank(1) + relevance gate(1) + 答案(1) ≈ 4 次串行 LLM 调用，延迟和成本高。重构可考虑：合并 rerank+relevance、并行化、或在 distance gate 足够强时跳过部分 LLM 调用。
 

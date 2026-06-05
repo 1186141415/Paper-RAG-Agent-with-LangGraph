@@ -269,6 +269,8 @@ retrieve(top_k=20)
 
 ⚠️ **距离阈值（2.2 / 2.4）是针对当前 embedding 模型 + FAISS L2 经验调出来的。** 一旦更换 embedding 模型或向量库（包括切到 Milvus），距离尺度会变，阈值必须重新评估，否则证据门会失准。
 
+> 📊 已实测分析（见 `docs/eval/threshold_analysis_milvus.md` + `scripts/analyze_gate_distance.py`）：**Milvus L2 = √(FAISS L2)**（FAISS IndexFlatL2 返回平方 L2、Milvus 返回未平方 L2；35 chunk / 3 query 实测 `|√(FAISS)−Milvus|=0`）。故切到 Milvus 后等效阈值应取 √：best≈1.48、avg≈1.55（保守取 1.5 / 1.6），**不是**线性外推的 1.80 / 1.96。当前代码仍保留 2.2 / 2.4（在 Milvus 下偏松，distance gate 几乎总 PASS，主要靠第二层 LLM 相关性门兜底），建议在更大评测集确认后再「按向量库后端区分阈值」落地并跑回归。
+
 ---
 
 ## 8. 当前已知技术债 / 重构重点（高优先级，按影响排序）

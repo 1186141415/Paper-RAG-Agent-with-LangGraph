@@ -319,6 +319,98 @@
                 </div>
             </div>
 
+            {% if agent_trace.context_metrics %}
+                <h4 style="margin: 18px 0 6px;">Evidence Gate · 双层证据门</h4>
+                <p class="section-desc">
+                    Layer 1 距离门（不调 LLM）+ Layer 2 类型化 LLM 相关性门，展示最终 sufficiency 的裁决依据。
+                </p>
+                <div class="trace-grid">
+                    <div class="trace-item">
+                        <span class="trace-label">Layer 1 · Distance Gate</span>
+                        {% if agent_trace.context_metrics.distance_gate_passed %}
+                            <span class="badge success">PASS</span>
+                        {% else %}
+                            <span class="badge danger">FAIL</span>
+                        {% endif %}
+                        <span class="trace-value" style="font-weight: normal;">
+                            best {{ agent_trace.context_metrics.best_distance|default:"—" }}
+                            / avg {{ agent_trace.context_metrics.avg_top_distance|default:"—" }}
+                            （阈值 ≤ {{ agent_trace.context_metrics.max_best_distance }}
+                            / ≤ {{ agent_trace.context_metrics.max_avg_top_distance }}）
+                        </span>
+                    </div>
+
+                    <div class="trace-item">
+                        <span class="trace-label">Chunks</span>
+                        <span class="trace-value">
+                            {{ agent_trace.context_metrics.num_chunks|default:0 }}
+                            （min {{ agent_trace.context_metrics.min_required_chunks|default:0 }}）
+                        </span>
+                    </div>
+
+                    <div class="trace-item">
+                        <span class="trace-label">Question Type</span>
+                        <span class="trace-value">
+                            {{ agent_trace.context_metrics.llm_question_type|default:"—" }}
+                            <span style="color: #6b7280; font-weight: normal;">
+                                ({{ agent_trace.context_metrics.llm_gate_mode|default:"—" }})
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="trace-item">
+                        <span class="trace-label">Layer 2 · LLM Relevance Gate</span>
+                        {% if agent_trace.context_metrics.llm_relevance_check == True %}
+                            <span class="badge success">YES</span>
+                        {% elif agent_trace.context_metrics.llm_relevance_check == False %}
+                            <span class="badge danger">NO</span>
+                        {% else %}
+                            <span class="badge">N/A</span>
+                        {% endif %}
+                        <span class="trace-value" style="font-weight: normal;">
+                            {{ agent_trace.context_metrics.llm_relevance_reason|default:"" }}
+                        </span>
+                    </div>
+
+                    <div class="trace-item">
+                        <span class="trace-label">Rerank</span>
+                        {% if agent_trace.context_metrics.rerank_fallback %}
+                            <span class="badge warning">FALLBACK</span>
+                        {% elif agent_trace.context_metrics.rerank_used %}
+                            <span class="badge success">used</span>
+                        {% else %}
+                            <span class="badge">—</span>
+                        {% endif %}
+                        {% if agent_trace.context_metrics.rerank_error %}
+                            <span class="trace-value" style="font-weight: normal;">
+                                {{ agent_trace.context_metrics.rerank_error }}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="trace-item">
+                        <span class="trace-label">Final Sufficiency Reason</span>
+                        <span class="trace-value" style="font-weight: normal;">
+                            {{ agent_trace.context_metrics.final_sufficiency_reason|default:"—" }}
+                        </span>
+                    </div>
+
+                    {% if agent_trace.context_metrics.llm_soft_warning %}
+                        <div class="trace-item">
+                            <span class="trace-label">Soft Warning</span>
+                            <span class="badge warning">
+                                {{ agent_trace.context_metrics.llm_soft_warning }}
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <details style="margin-top: 12px;">
+                    <summary>Context Metrics Raw Data</summary>
+                    <pre>{{ agent_trace.context_metrics }}</pre>
+                </details>
+            {% endif %}
+
             <details style="margin-top: 14px;">
                 <summary>Route Decision Raw Data</summary>
                 <pre>{{ agent_trace.route_decision }}</pre>
@@ -359,7 +451,12 @@
 
             {% for c in chunks %}
                 <div class="chunk-card">
-                    <div class="chunk-source">{{ c.source }}</div>
+                    <div class="chunk-source">
+                        {{ c.source }}
+                        <span style="float: right; color: #6b7280; font-weight: normal; font-size: 12px;">
+                            rank #{{ c.retrieval_rank }} · distance {{ c.distance|floatformat:4 }}
+                        </span>
+                    </div>
                     <div class="chunk-text">{{ c.text }}</div>
                 </div>
             {% endfor %}

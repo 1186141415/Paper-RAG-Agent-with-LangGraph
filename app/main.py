@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 
 from app.config import DATA_DIR
@@ -14,16 +14,14 @@ from app.graph.workflow import AgentWorkflow
 
 logger = setup_logger()
 
-session_manager = SessionManager(max_turns=3)
 
-rag = None
-workflow = None
+def _build_rag_and_workflow() -> tuple[RAGSystem, AgentWorkflow, int, int]:
+    """Load PDFs, build the RAG index, and initialize AgentWorkflow.
 
-
-def _init_rag_and_workflow() -> tuple[int, int]:
-    """Load PDFs, build RAG index, and initialize AgentWorkflow. Return (total_docs, total_chunks)."""
-    global rag, workflow
-
+    Return (rag, workflow, total_docs, total_chunks).
+    纯构建、无副作用：不写任何模块级全局，构建好的对象交给调用方放入 app.state，
+    避免 reload_kb 整体替换全局变量带来的可变状态竞争。
+    """
     logger.info("Loading RAG system...")
 
     docs = load_pdfs(DATA_DIR)
@@ -38,12 +36,16 @@ def _init_rag_and_workflow() -> tuple[int, int]:
     workflow = AgentWorkflow(TOOLS, rag=rag)
 
     logger.info("RAG + LangGraph ready!")
-    return len(docs), len(chunks)
+    return rag, workflow, len(docs), len(chunks)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    _init_rag_and_workflow()
+    rag, workflow, _, _ = _build_rag_and_workflow()
+    # 用 app.state 持有依赖，取代模块级全局 rag / workflow / session_manager
+    app.state.rag = rag
+    app.state.workflow = workflow
+    app.state.session_manager = SessionManager(max_turns=3)
     yield
     logger.info("FastAPI lifespan shutdown.")
 
@@ -57,8 +59,11 @@ class QueryRequest(BaseModel):
 
 
 @app.post("/ask")
-def ask_question(req: QueryRequest):
+def ask_question(req: QueryRequest, request: Request):
     try:
+        session_manager: SessionManager = request.app.state.session_manager
+        workflow: AgentWorkflow = request.app.state.workflow
+
         history = session_manager.get_history(req.session_id)
 
         result = workflow.invoke(
@@ -108,8 +113,8 @@ def ask_question(req: QueryRequest):
 
 
 @app.post("/clear/{session_id}")
-def clear_session(session_id: str):
-    session_manager.clear_session(session_id)
+def clear_session(session_id: str, request: Request):
+    request.app.state.session_manager.clear_session(session_id)
     return {
         "session_id": session_id,
         "message": "session cleared"
@@ -117,11 +122,15 @@ def clear_session(session_id: str):
 
 
 @app.post("/reload_kb")
-def reload_kb():
+def reload_kb(request: Request):
     logger.info("Reloading knowledge base...")
     print("🔄 Reloading knowledge base...")
 
-    total_docs, total_chunks = _init_rag_and_workflow()
+    rag, workflow, total_docs, total_chunks = _build_rag_and_workflow()
+
+    # 原子替换 app.state 上的引用：进行中的请求继续持有旧对象，新请求拿到新对象
+    request.app.state.rag = rag
+    request.app.state.workflow = workflow
 
     logger.info("Knowledge base and AgentWorkflow reloaded successfully.")
 

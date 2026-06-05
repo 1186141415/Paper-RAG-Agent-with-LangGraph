@@ -3,7 +3,7 @@ from typing import Any
 
 from pymilvus import MilvusClient
 
-from app.llm_utils import get_embedding
+from app.llm_utils import get_embedding, get_embeddings
 from app.logger_config import setup_logger
 from app.vector_store.base import BaseVectorStore
 from app.config import (
@@ -117,7 +117,8 @@ class MilvusVectorStore(BaseVectorStore):
             return
 
         texts = [c["text"] for c in self.chunks]
-        embeddings = [get_embedding(t).tolist() for t in texts]
+        # 批量 + 缓存：相同 chunk 在 reload / 重启时不再重复请求 embedding API
+        embeddings = get_embeddings(texts).tolist()
 
         dim = len(embeddings[0])
 

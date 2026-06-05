@@ -24,6 +24,11 @@ CHAT_MODEL = os.getenv('CHAT_MODEL', 'deepseek-chat')
 EMBEDDING_MODEL = os.getenv('EMBEDDING_MODEL', 'text-embedding-3-small')
 DATA_DIR = os.getenv('DATA_DIR', 'data')
 
+# Embedding 批处理大小 + 磁盘缓存路径：
+# 避免 reload_kb / 进程重启时对相同 chunk 重复请求 embedding API。
+EMBEDDING_CACHE_PATH = os.getenv('EMBEDDING_CACHE_PATH', '.embedding_cache/embeddings.json')
+EMBEDDING_BATCH_SIZE = int(os.getenv('EMBEDDING_BATCH_SIZE', '64'))
+
 
 VECTOR_STORE = os.getenv("VECTOR_STORE", "faiss").lower()
 

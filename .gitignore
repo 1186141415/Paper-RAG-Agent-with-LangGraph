@@ -8,3 +8,4 @@ db.sqlite3
 django_shell/db.sqlite3
 milvus_demo.db/
 data/
+.embedding_cache/

@@ -1,9 +1,8 @@
 # app/vector_store/faiss_store.py
 
 import faiss
-import numpy as np
 
-from app.llm_utils import get_embedding
+from app.llm_utils import get_embedding, get_embeddings
 from app.logger_config import setup_logger
 from app.vector_store.base import BaseVectorStore
 
@@ -39,8 +38,8 @@ class FaissVectorStore(BaseVectorStore):
 
         texts = [c["text"] for c in self.chunks]
 
-        embeddings = [get_embedding(t) for t in texts]
-        self.embeddings = np.vstack(embeddings).astype("float32")
+        # 批量 + 缓存：相同 chunk 在 reload / 重启时不再重复请求 embedding API
+        self.embeddings = get_embeddings(texts).astype("float32")
 
         dim = self.embeddings.shape[1]
         self.index = faiss.IndexFlatL2(dim)

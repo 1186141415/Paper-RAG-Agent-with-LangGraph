@@ -139,7 +139,7 @@ Paper-RAG-Agent-with-LangGraph/
 
 - `process_documents` 产出的 chunk：`{"text": str, "source": str}`
 - `VectorStore.build(chunks: list[dict]) -> None`
-- `VectorStore.search(query: str, k: int) -> list[dict]`，每个元素**必须**含：
+- `VectorStore.search(query: str, k: int, sources: list[str] | None = None) -> list[dict]`（`sources` 可选：按论文 source 分片检索，`None`=检索全部；返回字段不变），每个元素**必须**含：
   ```python
   {"source": str, "text": str, "distance": float, "retrieval_rank": int}
   ```

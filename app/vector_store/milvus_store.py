@@ -173,7 +173,7 @@ class MilvusVectorStore(BaseVectorStore):
             f"into collection={self.collection_name}"
         )
 
-    def search(self, query: str, k: int = 5) -> list[dict]:
+    def search(self, query: str, k: int = 5, sources=None) -> list[dict]:
         """
         Search top-k related chunks from Milvus.
 
@@ -194,12 +194,19 @@ class MilvusVectorStore(BaseVectorStore):
 
         query_vec = get_embedding(query).tolist()
 
-        raw_results = self.client.search(
+        search_kwargs = dict(
             collection_name=self.collection_name,
             data=[query_vec],
             limit=k,
             output_fields=["text", "source", "chunk_id"],
         )
+
+        # source 分片：用 Milvus boolean expression 在检索时按论文过滤（逻辑分区）
+        if sources:
+            quoted = ", ".join(f'"{s}"' for s in sources)
+            search_kwargs["filter"] = f"source in [{quoted}]"
+
+        raw_results = self.client.search(**search_kwargs)
 
         results = []
 

@@ -93,6 +93,7 @@ Django 产品壳层展示
 - 使用 Embedding 模型构建向量表示；构建时**批量请求 + 按 chunk 磁盘缓存**（缓存目录 `.embedding_cache/`，缓存键绑定 embedding 模型名），`reload_kb` / 重启后相同 chunk 直接命中缓存,避免重复消耗 API
 - 基于 FAISS `IndexFlatL2` 进行向量检索,Top-K = 20
 - 支持通过 `.env` 的 `VECTOR_STORE` 在 **FAISS** 与 **Milvus Lite** 两种向量库后端间切换：统一 `VectorStore.build/search` 抽象，两种后端的检索返回结构保持一致（`source/text/distance/retrieval_rank`，详见 §14.8）
+- **source-aware 检索**：问题点名某篇论文（如 paper1）时自动识别，并只在该论文的分片内检索（FAISS 多索引 / Milvus `source in [...]` filter），缓解同领域多篇论文「跨论文 chunk 混淆」；点名但分片内无命中时自动降级为全量检索
 - 对初步检索结果使用 LLM rerank 重排,取前 10 进入后续流程
 - Rerank 输出做 markdown 代码块剥离、bracket 列表抽取、去重补齐和 fallback trace,避免 LLM 输出格式不稳定影响系统可用性
 - **双层证据充分性判断**:

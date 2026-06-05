@@ -31,8 +31,8 @@ class RAGSystem:
     def build_index(self):
         self.vector_store.build(self.chunks)
 
-    def retrieve(self, query, k=5):
-        return self.vector_store.search(query, k)
+    def retrieve(self, query, k=5, sources=None):
+        return self.vector_store.search(query, k, sources=sources)
 
     def _detect_target_sources(self, query: str) -> set:
         """从 query 里识别被点名的论文 source（如 'paper1' → 'Paper1.pdf'）。
@@ -409,20 +409,17 @@ class RAGSystem:
         }
 
         if target_sources:
-            raw_k = min(len(self.chunks), max(self.top_k * 3, self.top_k))
-            retrieved_all = self.retrieve(question, k=raw_k)
-            filtered = [c for c in retrieved_all if c.get("source") in target_sources]
+            # C2 物理分片：直接在对应论文的分片内检索（FAISS 多索引 / Milvus filter）
+            retrieved = self.retrieve(question, k=self.top_k, sources=target_sources)
 
-            if filtered:
-                retrieved = filtered[:self.top_k]
+            if retrieved:
                 source_filter["source_filter_applied"] = True
                 logger.info(
-                    f"[source_filter] targets={sorted(target_sources)}, "
-                    f"raw={len(retrieved_all)}, kept={len(retrieved)}"
+                    f"[source_filter] targets={sorted(target_sources)}, kept={len(retrieved)}"
                 )
             else:
-                # 点名了但没召回到对应 source，降级为未过滤结果，避免误伤
-                retrieved = retrieved_all[:self.top_k]
+                # 点名了但分片内检索为空，降级为全量检索，避免误伤
+                retrieved = self.retrieve(question, k=self.top_k)
                 source_filter["source_filter_fallback"] = True
                 logger.warning(
                     f"[source_filter] targets={sorted(target_sources)} matched no chunk, "

@@ -15,7 +15,26 @@ def chat_home(request):
 
         if current_session_id and question:
             try:
-                result = ask_ai(session_id=current_session_id, question=question)
+                # 取该会话已持久化的历史（不含本轮），作为 LLM 上下文传给 FastAPI，
+                # 统一会话来源到 Django SQLite，避免与 FastAPI 内存历史不同步。
+                prior_session = ChatSession.objects.filter(
+                    session_id=current_session_id
+                ).first()
+                chat_history = []
+                if prior_session:
+                    recent_msgs = list(
+                        prior_session.messages.all().order_by("created_at")
+                    )[-6:]
+                    chat_history = [
+                        {"role": m.role, "content": m.content}
+                        for m in recent_msgs
+                    ]
+
+                result = ask_ai(
+                    session_id=current_session_id,
+                    question=question,
+                    chat_history=chat_history,
+                )
                 chunks = result.get("chunks", [])
                 agent_trace = result.get("agent_trace")
 

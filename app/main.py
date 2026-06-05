@@ -56,6 +56,9 @@ app = FastAPI(lifespan=lifespan)
 class QueryRequest(BaseModel):
     session_id: str
     question: str
+    # 可选：由调用方（如 Django 产品壳层）传入的对话历史。
+    # 提供时优先作为 LLM 上下文以统一会话来源；不提供则回退到 FastAPI 内存短期历史。
+    chat_history: list[dict] | None = None
 
 
 @app.post("/ask")
@@ -64,7 +67,12 @@ def ask_question(req: QueryRequest, request: Request):
         session_manager: SessionManager = request.app.state.session_manager
         workflow: AgentWorkflow = request.app.state.workflow
 
-        history = session_manager.get_history(req.session_id)
+        # 会话来源优先级：调用方显式传入的 chat_history（如 Django 的 SQLite 持久化历史）
+        # 优先于 FastAPI 内存历史，解决「内存 vs DB 双写不同步」；未传入时保持原行为。
+        if req.chat_history is not None:
+            history = req.chat_history
+        else:
+            history = session_manager.get_history(req.session_id)
 
         result = workflow.invoke(
             session_id=req.session_id,

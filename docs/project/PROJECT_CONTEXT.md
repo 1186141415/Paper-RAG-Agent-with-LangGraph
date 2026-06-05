@@ -174,7 +174,7 @@ error: str                 # 异常兜底用
 
 ### 5.4 /ask 请求与响应
 
-请求：`{"session_id": str, "question": str}`
+请求：`{"session_id": str, "question": str, "chat_history"?: list[{"role","content"}]}`（`chat_history` 可选：调用方传入则优先作为 LLM 上下文，否则回退到 FastAPI 内存历史）
 响应：
 ```
 {
@@ -275,12 +275,8 @@ retrieve(top_k=20)
 
 > 这些都是从现有代码里读出来的真实问题，不是臆测。重构时可优先处理。
 
-1. **会话状态双写、不同步（架构级）**
-   - FastAPI 用 in-memory `SessionManager`（只留最近 3 轮，进程重启即丢，多 worker 不共享）。
-   - Django 用 SQLite 持久化**全量**消息。
-   - 喂给 LLM 的对话历史**只来自 FastAPI 内存**，不读 Django DB。
-   - 后果：FastAPI 重启后多轮上下文丢失，但 Django 页面仍显示完整历史，二者会 diverge。
-   - 重构方向：统一会话来源（让 FastAPI 从持久层读历史，或让 Django 把历史随请求传入），并支持多 worker。
+1. ~~**会话状态双写、不同步（架构级）**~~ —（✅ 已改善）`/ask` 新增可选 `chat_history`；Django `chat_home` 现在把该会话的 SQLite 历史（最近 3 轮 = 6 条）随请求传入，FastAPI 优先用传入历史作为 LLM 上下文，统一会话来源到持久层；未传入时回退内存 `SessionManager`（向后兼容）。
+   - 残留：FastAPI 内存 `SessionManager` 仍保留（兼容不传 history 的客户端），与传入历史并存；多 worker 共享仍需引入共享存储，留待后续。
 
 2. ~~**FastAPI 启动钩子已废弃**~~ —（✅ 已解决）`on_event` 已迁移到 `lifespan` async context manager（见 `app/main.py`）。
 

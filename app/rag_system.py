@@ -34,6 +34,22 @@ class RAGSystem:
     def retrieve(self, query, k=5):
         return self.vector_store.search(query, k)
 
+    def _detect_target_sources(self, query: str) -> set:
+        """从 query 里识别被点名的论文 source（如 'paper1' → 'Paper1.pdf'）。
+
+        仅做大小写 / 空格无关的子串匹配；识别不到时返回空集合（即不做 source 过滤）。
+        source 取自当前 chunks，因此支持用户任意命名的 PDF。
+        """
+        q = query.lower().replace(" ", "")
+        all_sources = {c.get("source", "") for c in self.chunks if c.get("source")}
+
+        targets = set()
+        for src in all_sources:
+            stem = src.lower().rsplit(".", 1)[0].replace(" ", "")
+            if stem and stem in q:
+                targets.add(src)
+        return targets
+
     def assess_context_sufficiency(self, retrieved_chunks):
         """
         Lightweight context sufficiency check.
@@ -383,7 +399,37 @@ class RAGSystem:
         if chat_history is None:
             chat_history = []
 
-        retrieved = self.retrieve(question, k=self.top_k)
+        # source-aware retrieval：问题点名某篇论文时，先扩大召回再按 source 过滤，
+        # 缓解同领域多篇论文「跨论文 chunk 混淆」。识别不到点名时保持原行为。
+        target_sources = self._detect_target_sources(question)
+        source_filter = {
+            "source_filter_applied": False,
+            "source_filter_targets": sorted(target_sources),
+            "source_filter_fallback": False,
+        }
+
+        if target_sources:
+            raw_k = min(len(self.chunks), max(self.top_k * 3, self.top_k))
+            retrieved_all = self.retrieve(question, k=raw_k)
+            filtered = [c for c in retrieved_all if c.get("source") in target_sources]
+
+            if filtered:
+                retrieved = filtered[:self.top_k]
+                source_filter["source_filter_applied"] = True
+                logger.info(
+                    f"[source_filter] targets={sorted(target_sources)}, "
+                    f"raw={len(retrieved_all)}, kept={len(retrieved)}"
+                )
+            else:
+                # 点名了但没召回到对应 source，降级为未过滤结果，避免误伤
+                retrieved = retrieved_all[:self.top_k]
+                source_filter["source_filter_fallback"] = True
+                logger.warning(
+                    f"[source_filter] targets={sorted(target_sources)} matched no chunk, "
+                    f"fallback to unfiltered"
+                )
+        else:
+            retrieved = self.retrieve(question, k=self.top_k)
 
         # rerank（用 text）
         texts = [c["text"] for c in retrieved]
@@ -428,6 +474,8 @@ class RAGSystem:
             "rerank_indices": rerank_trace.get("rerank_indices", [])[:self.rerank_k],
             "rerank_raw_output": rerank_trace.get("rerank_raw_output", ""),
         })
+
+        context_metrics.update(source_filter)
 
         if not distance_sufficient:
             context_sufficient = False

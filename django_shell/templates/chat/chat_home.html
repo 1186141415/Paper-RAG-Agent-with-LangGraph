@@ -389,6 +389,23 @@
                     </div>
 
                     <div class="trace-item">
+                        <span class="trace-label">Source Filter · 按论文过滤</span>
+                        {% if agent_trace.context_metrics.source_filter_applied %}
+                            <span class="badge success">ON</span>
+                            <span class="trace-value" style="font-weight: normal;">
+                                {{ agent_trace.context_metrics.source_filter_targets|join:", " }}
+                            </span>
+                        {% elif agent_trace.context_metrics.source_filter_fallback %}
+                            <span class="badge warning">FALLBACK</span>
+                            <span class="trace-value" style="font-weight: normal;">
+                                点名 {{ agent_trace.context_metrics.source_filter_targets|join:", " }} 但未命中检索，已降级为不过滤
+                            </span>
+                        {% else %}
+                            <span class="badge">OFF</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="trace-item">
                         <span class="trace-label">Final Sufficiency Reason</span>
                         <span class="trace-value" style="font-weight: normal;">
                             {{ agent_trace.context_metrics.final_sufficiency_reason|default:"—" }}

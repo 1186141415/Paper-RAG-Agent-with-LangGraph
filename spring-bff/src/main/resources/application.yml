@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+paperpilot:
+  django-base-url: ${DJANGO_BASE_URL:http://127.0.0.1:8001}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB

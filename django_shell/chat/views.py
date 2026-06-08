@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .services.ai_client import ask_ai
-from .models import ChatSession, ChatMessage
+from django.shortcuts import render, get_object_or_404
+
+from chat.models import ChatSession
+from chat.services.chat_service import ask_and_persist
 
 
 def chat_home(request):
@@ -15,49 +16,9 @@ def chat_home(request):
 
         if current_session_id and question:
             try:
-                # 取该会话已持久化的历史（不含本轮），作为 LLM 上下文传给 FastAPI，
-                # 统一会话来源到 Django SQLite，避免与 FastAPI 内存历史不同步。
-                prior_session = ChatSession.objects.filter(
-                    session_id=current_session_id
-                ).first()
-                chat_history = []
-                if prior_session:
-                    recent_msgs = list(
-                        prior_session.messages.all().order_by("created_at")
-                    )[-6:]
-                    chat_history = [
-                        {"role": m.role, "content": m.content}
-                        for m in recent_msgs
-                    ]
-
-                result = ask_ai(
-                    session_id=current_session_id,
-                    question=question,
-                    chat_history=chat_history,
-                )
+                result = ask_and_persist(current_session_id, question)
                 chunks = result.get("chunks", [])
                 agent_trace = result.get("agent_trace")
-
-                session_obj, created = ChatSession.objects.get_or_create(
-                    session_id=current_session_id,
-                    defaults={"title": question[:60]}
-                )
-
-                if not session_obj.title:
-                    session_obj.title = question[:60]
-                    session_obj.save()
-
-                ChatMessage.objects.create(
-                    session=session_obj,
-                    role="user",
-                    content=question
-                )
-
-                ChatMessage.objects.create(
-                    session=session_obj,
-                    role="assistant",
-                    content=result.get("answer", "")
-                )
 
             except Exception as e:
                 error = str(e)

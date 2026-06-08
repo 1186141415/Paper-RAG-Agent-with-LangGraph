@@ -29,6 +29,9 @@ DATA_DIR = os.getenv('DATA_DIR', 'data')
 EMBEDDING_CACHE_PATH = os.getenv('EMBEDDING_CACHE_PATH', '.embedding_cache/embeddings.json')
 EMBEDDING_BATCH_SIZE = int(os.getenv('EMBEDDING_BATCH_SIZE', '64'))
 
+# Chat / Embedding API 超时（秒）。经系统代理访问时 SSL 握手可能较慢，默认 120。
+LLM_API_TIMEOUT = float(os.getenv('LLM_API_TIMEOUT', '120'))
+
 
 VECTOR_STORE = os.getenv("VECTOR_STORE", "faiss").lower()
 

@@ -55,3 +55,6 @@ class AgentState(TypedDict, total=False):
 
     # 预留错误字段，后面做异常兜底会用到
     error: str
+
+    # LLM 路由失败时的非阻断错误（走关键词兜底，不触发 llm_fallback）
+    router_error: str

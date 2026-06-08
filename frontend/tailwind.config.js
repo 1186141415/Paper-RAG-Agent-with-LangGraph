@@ -1,0 +1,66 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{vue,js,ts}"],
+  theme: {
+    extend: {
+      colors: {
+        background: "#f9f9ff",
+        surface: "#f9f9ff",
+        "surface-container-lowest": "#ffffff",
+        "surface-container-low": "#f0f3ff",
+        "surface-container": "#e7eeff",
+        "surface-container-high": "#dee8ff",
+        "surface-container-highest": "#d8e3fa",
+        "surface-variant": "#d8e3fa",
+        "on-surface": "#111c2c",
+        "on-surface-variant": "#43474e",
+        primary: "#002045",
+        "primary-container": "#1a365d",
+        "on-primary": "#ffffff",
+        "on-primary-container": "#86a0cd",
+        secondary: "#1960a3",
+        "secondary-container": "#7db6ff",
+        "on-secondary": "#ffffff",
+        "on-secondary-container": "#00477f",
+        "secondary-fixed": "#d3e4ff",
+        outline: "#74777f",
+        "outline-variant": "#c4c6cf",
+        error: "#ba1a1a",
+        "error-container": "#ffdad6",
+        "on-error-container": "#93000a",
+        trace: "#1a202c",
+      },
+      spacing: {
+        "sidebar-width": "280px",
+        inspector: "380px",
+      },
+      fontFamily: {
+        sans: ["Inter", "PingFang SC", "Microsoft YaHei", "sans-serif"],
+        mono: ["JetBrains Mono", "ui-monospace", "monospace"],
+        "body-md": ["Inter", "PingFang SC", "sans-serif"],
+        "label-caps": ["Inter", "PingFang SC", "sans-serif"],
+        "mono-code": ["JetBrains Mono", "ui-monospace", "monospace"],
+      },
+      fontSize: {
+        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+        "label-caps": [
+          "12px",
+          { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" },
+        ],
+        "mono-code": ["13px", { lineHeight: "20px", fontWeight: "400" }],
+        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+      },
+      boxShadow: {
+        card: "0 1px 3px rgba(0,0,0,0.05)",
+        elevated: "0 10px 15px -3px rgba(0,0,0,0.1)",
+      },
+      borderRadius: {
+        DEFAULT: "0.125rem",
+        lg: "0.25rem",
+        xl: "0.5rem",
+      },
+    },
+  },
+  plugins: [],
+};

@@ -1,4 +1,5 @@
 import json
+import re
 from typing import Any
 
 from app.graph.state import AgentState
@@ -36,6 +37,78 @@ def maybe_force_web_search(query: str, decision: dict) -> dict:
         }
 
     return decision
+
+
+def fallback_route_on_router_failure(query: str) -> dict:
+    """LLM 路由不可用时的关键词兜底，避免论文类问题误降级到 llm。"""
+    q = query.lower()
+
+    calc_pattern = re.compile(
+        r"(?:^|[\s(])(?:\d+\.?\d*|\.\d+)\s*[\+\-\*/]\s*(?:\d+\.?\d*|\.\d+)"
+    )
+    if calc_pattern.search(query) or any(k in q for k in ("calculate", "计算")):
+        expr = query
+        for prefix in ("calculate", "calc", "compute", "计算"):
+            if q.startswith(prefix):
+                expr = query[len(prefix):].strip(" :：=？?")
+                break
+        return {
+            "tool": "calculator",
+            "input": expr or query,
+            "reason": "Router unavailable; keyword rules suggest a math calculation.",
+        }
+
+    if any(k in q for k in ("what time", "current time", "几点", "现在几点", "当前时间", "今天几号")):
+        return {
+            "tool": "time",
+            "input": query,
+            "reason": "Router unavailable; keyword rules suggest a time query.",
+        }
+
+    web_keywords = [
+        "latest", "recent", "current", "today", "news",
+        "web", "online", "internet", "search the web",
+        "最新", "最近", "当前", "今天", "联网", "网上", "搜索一下",
+    ]
+    if any(k in q for k in web_keywords):
+        return {
+            "tool": "web_search",
+            "input": query,
+            "reason": "Router unavailable; keyword rules suggest external web search.",
+        }
+
+    rag_keywords = [
+        "paper1", "paper2", "paper3", "papaer1", "papaer2",
+        "this paper", "the paper", "pdf", "document",
+        "论文", "文档", "contribution", "contribute", "main idea",
+        "difference between", "compare", "对比", "区别", "贡献",
+    ]
+    looks_like_paper = (
+        any(k in q for k in rag_keywords)
+        or re.search(r"paper\s*\d", q) is not None
+    )
+    if looks_like_paper:
+        return {
+            "tool": "rag",
+            "input": query,
+            "reason": "Router unavailable; keyword rules suggest local document retrieval.",
+        }
+
+    return {
+        "tool": "llm",
+        "input": query,
+        "reason": "Router unavailable; falling back to the general LLM tool.",
+    }
+
+
+def _format_user_facing_error(error: str) -> str:
+    err = error.lower()
+    if "timed out" in err or "timeout" in err or "connecttimeout" in err:
+        return (
+            "暂时无法连接大模型服务（请求超时）。请检查网络或代理（如 Clash）是否稳定后重试。"
+            f"\n技术详情：{error}"
+        )
+    return f"系统执行过程中出现问题：{error}"
 
 
 def clean_json_text(text: str) -> str:
@@ -183,14 +256,15 @@ def build_choose_tool_node(tools: list[dict[str, Any]]):
 
         except Exception as e:
             logger.exception("choose_tool_node failed")
+            decision = fallback_route_on_router_failure(query)
+            decision = maybe_force_web_search(query, decision)
+            logger.warning(
+                f"[choose_tool_node] router API failed, keyword fallback: {decision}"
+            )
             return {
-                "decision": {
-                    "tool": "llm",
-                    "input": query,
-                    "reason": "Router failed, so the system falls back to the general LLM tool."
-                },
-                "error": f"choose_tool_node failed: {str(e)}",
-                "workflow_path": workflow_path
+                "decision": decision,
+                "router_error": f"choose_tool_node failed: {str(e)}",
+                "workflow_path": workflow_path,
             }
 
     return choose_tool_node
@@ -226,7 +300,8 @@ def build_execute_tool_node(tools: list[dict[str, Any]], rag=None):
                             "tool_input": tool_input,
                             "tool_output": result
                         },
-                        "workflow_path": workflow_path
+                        "error": "",
+                        "workflow_path": workflow_path,
                     }
 
             logger.warning(f"[execute_tool_node] tool not found: {tool_name}")
@@ -334,7 +409,7 @@ def generate_answer_node(state: AgentState) -> AgentState:
     if state.get("error"):
         logger.warning(f"[generate_answer_node] error found in state: {state['error']}")
         return {
-            "final_answer": f"系统执行过程中出现问题：{state['error']}",
+            "final_answer": _format_user_facing_error(state["error"]),
             "retrieved_chunks": state.get("retrieved_chunks", []),
             "context_sufficient": state.get("context_sufficient"),
             "context_metrics": state.get("context_metrics", {}),

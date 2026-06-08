@@ -24,6 +24,8 @@ class ChatMessage(models.Model):
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     content = models.TextField()
+    # assistant 消息可存 agent_trace、chunks 等快照，供会话详情回放
+    metadata = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -88,6 +88,8 @@ def ask_question(req: QueryRequest, request: Request):
 
         agent_trace = {
             "route_decision": decision,
+            "routed_tool": decision.get("tool", ""),
+            "router_error": result.get("router_error", ""),
             "tool_used": tool_result.get("tool_name", ""),
             "tool_input": tool_result.get("tool_input", ""),
             "fallback_used": result.get("fallback_used", False),

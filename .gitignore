@@ -9,3 +9,8 @@ django_shell/db.sqlite3
 milvus_demo.db/
 data/
 .embedding_cache/
+.DS_Store
+frontend/node_modules/
+frontend/dist/
+spring-bff/target/
+tmp_analysis_milvus.db

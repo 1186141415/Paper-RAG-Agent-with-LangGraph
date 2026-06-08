@@ -259,9 +259,21 @@
 
             <div class="trace-grid">
                 <div class="trace-item">
-                    <span class="trace-label">Tool Used</span>
+                    <span class="trace-label">Routed Tool</span>
+                    <span class="trace-value">{{ agent_trace.routed_tool|default:agent_trace.route_decision.tool }}</span>
+                </div>
+
+                <div class="trace-item">
+                    <span class="trace-label">Final Tool Executed</span>
                     <span class="trace-value">{{ agent_trace.tool_used }}</span>
                 </div>
+
+                {% if agent_trace.router_error %}
+                <div class="trace-item">
+                    <span class="trace-label">Router Error</span>
+                    <span class="badge warning">{{ agent_trace.router_error }}</span>
+                </div>
+                {% endif %}
 
                 <div class="trace-item">
                     <span class="trace-label">Tool Input</span>

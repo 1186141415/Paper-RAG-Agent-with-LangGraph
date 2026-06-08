@@ -21,16 +21,21 @@ from app.config import (
     EMBEDDING_MODEL,
     EMBEDDING_CACHE_PATH,
     EMBEDDING_BATCH_SIZE,
+    LLM_API_TIMEOUT,
 )
 
 client = OpenAI(
     api_key=DEEPSEEK_API_KEY,
-    base_url=DEEPSEEK_BASE_URL
+    base_url=DEEPSEEK_BASE_URL,
+    timeout=LLM_API_TIMEOUT,
+    max_retries=2,
 )
 
 client2 = OpenAI(
     api_key=EMBEDDING_API_KEY,
-    base_url=EMBEDDING_BASE_URL
+    base_url=EMBEDDING_BASE_URL,
+    timeout=LLM_API_TIMEOUT,
+    max_retries=2,
 )
 
 

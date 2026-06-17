@@ -583,12 +583,11 @@ Paper-RAG-Agent-with-LangGraph/
 │     ├─ eval_questions.json
 │     ├─ eval_run_result_top_k20.md
 │     └─ eval_run_result_top_k40.md
-├─ AGENTS.md                           # AI Agent 每轮必看精简约定（仓库根目录）
 ├─ requirements.txt
 └─ README.md
 ```
 
-更长的项目文档见 `docs/project/` 与 `docs/eval/`；重构或让 AI 改代码前请先读根目录 `AGENTS.md` 与 `docs/project/PROJECT_CONTEXT.md`。
+更长的项目文档见 `docs/project/` 与 `docs/eval/`；重构或让 AI 改代码前请先读 `docs/project/PROJECT_CONTEXT.md`。
 
 ---
 

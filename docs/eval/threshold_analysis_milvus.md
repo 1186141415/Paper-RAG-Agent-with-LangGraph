@@ -59,4 +59,4 @@
 2. **统一尺度**：在 `FaissVectorStore.search` 对距离开方，使两后端都用「未平方 L2」，从而共用一套阈值。
 3. 暂不改：知悉当前 Milvus 下距离门偏松，主要依赖第二层 LLM 相关性门兜底。
 
-> 本轮按 analysis 范围执行，仅给出结论与建议，**未改动 `rag_system.py` 的阈值常量**。样本规模（35 chunk / 3 query）偏小，建议结合 `docs/eval/eval_questions.json` 的完整评测集复测后再落地阈值变更，并跑回归（见 `AGENTS.md` 红线：改阈值/换向量库必须重评 + 回归）。
+> 本轮按 analysis 范围执行，仅给出结论与建议，**未改动 `rag_system.py` 的阈值常量**。样本规模（35 chunk / 3 query）偏小，建议结合 `docs/eval/eval_questions.json` 的完整评测集复测后再落地阈值变更，并跑回归（见 `docs/AGENTS.md` 红线：改阈值/换向量库必须重评 + 回归）。

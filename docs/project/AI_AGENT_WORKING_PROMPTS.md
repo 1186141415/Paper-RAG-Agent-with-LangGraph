@@ -8,7 +8,7 @@
 
 1. README.md
 2. docs/project/PROJECT_CONTEXT.md
-3. AGENTS.md
+3. docs/AGENTS.md
 4. docs/project/PRODUCT_VISION.md
 5. 当前任务相关代码文件
 
@@ -24,7 +24,7 @@
 
 - README.md
 - docs/project/PROJECT_CONTEXT.md
-- AGENTS.md
+- docs/AGENTS.md
 - docs/project/PRODUCT_VISION.md
 
 阅读后，请先不要直接改代码。
@@ -120,7 +120,7 @@
 开始前请阅读：
 
 - docs/project/PROJECT_CONTEXT.md
-- AGENTS.md
+- docs/AGENTS.md
 - docs/project/PRODUCT_VISION.md
 
 任务要求：
@@ -147,7 +147,7 @@
 请先阅读：
 
 - docs/project/PROJECT_CONTEXT.md
-- AGENTS.md
+- docs/AGENTS.md
 - docs/project/PRODUCT_VISION.md
 
 然后输出：

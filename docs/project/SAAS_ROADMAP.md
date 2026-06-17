@@ -292,7 +292,7 @@ User → Django（页面、上传、SQLite 历史）
 |---|---|
 | `docs/project/PRODUCT_VISION.md` | 产品愿景与用户场景 |
 | `docs/project/PROJECT_CONTEXT.md` | 代码结构、数据契约、当前技术债 |
-| `AGENTS.md`（根目录） | Agent 每轮必守红线 |
+| `docs/AGENTS.md` | Agent 每轮必守红线 |
 | `docs/project/AI_AGENT_WORKING_PROMPTS.md` | 任务格式与推荐队列 |
 | `README.md`（根目录） | 对外介绍与 Quick Start |
 

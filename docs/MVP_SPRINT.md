@@ -86,3 +86,7 @@ npm run dev
 ## 遗留 Django 模板
 
 `http://127.0.0.1:8001/` 旧模板仍可用；新产品界面以 Vue 为准。
+
+## 设计稿
+
+Stitch 导出的 UI 参考模板在 `docs/design/stitch/`；实际运行时代码在 `frontend/`。

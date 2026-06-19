@@ -1,0 +1,37 @@
+[
+  {
+    "id": "q008",
+    "question": "What is the difference between Paper1 and Paper2?",
+    "type": "COMPARISON",
+    "expected_keywords": ["difference", "compare", "whereas", "in contrast"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q009",
+    "question": "Which method performs better, the one in Paper1 or Paper2?",
+    "type": "COMPARISON",
+    "expected_keywords": ["better", "outperform", "superior", "compare"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q010",
+    "question": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+    "type": "COMPARISON",
+    "expected_keywords": ["complementary", "competing", "similar", "different"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q019",
+    "question": "What are the shared assumptions between Paper1 and Paper2?",
+    "type": "COMPARISON",
+    "expected_keywords": ["assume", "assumption", "common", "share", "both"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  },
+  {
+    "id": "q020",
+    "question": "Do Paper1 and Paper2 address the same research problem?",
+    "type": "COMPARISON",
+    "expected_keywords": ["same", "problem", "research", "address", "focus"],
+    "expected_source": "Paper1.pdf / Paper2.pdf"
+  }
+]

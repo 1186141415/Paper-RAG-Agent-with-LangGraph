@@ -1,0 +1,965 @@
+{
+  "run_name": "baseline_single_rag",
+  "run_id": "baseline-single-rag-20260619",
+  "created_at": "2026-06-19T15:18:12.715247+00:00",
+  "api_base_url": "http://127.0.0.1:8000",
+  "endpoint": "http://127.0.0.1:8000/ask",
+  "question_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\baseline_comparison_questions.json",
+  "results_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\results\\baseline_single_rag.json",
+  "summary_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\results\\baseline_single_rag_summary.md",
+  "notes": [
+    "This baseline intentionally uses the existing FastAPI /ask endpoint.",
+    "Only COMPARISON questions are included so future Planner -> Answer Worker -> Synthesizer changes can be compared against the current single-link RAG behavior.",
+    "Each question uses a unique session_id to avoid chat-history contamination."
+  ],
+  "aggregate": {
+    "total_questions": 5,
+    "context_sufficient_count": 0,
+    "context_sufficient_rate": 0.0,
+    "expected_source_coverage_count": 2,
+    "expected_source_coverage_rate": 0.4,
+    "routed_to_rag_count": 5,
+    "llm_gate_pass_count": 0,
+    "distance_gate_pass_count": 5,
+    "failure_modes": {
+      "comparison_blocked_by_typed_relevance_gate": 5
+    }
+  },
+  "results": [
+    {
+      "id": "q008",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "difference",
+        "compare",
+        "whereas",
+        "in contrast"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "expected_source_coverage": true,
+      "session_id": "baseline-single-rag-20260619-q008",
+      "question": "What is the difference between Paper1 and Paper2?",
+      "answer": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.3250757455825806,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.2789052724838257,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.2698168754577637,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.2966938018798828,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "us ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 2025. Date of publication 10 June 2025; date of current version 20 June 2025. This work was supported in part by the National Natural Science Foundation of China under Grant 62302059 and Grant 62172053. The associate editor coordinating the review of this article and approving it for publication was Prof. Fernando Perez-Gonzalez. (Pengcheng Zhou and Zhengyang Fang contributed equally to this work.) (Corresponding authors: Zhongliang Yang; Linna Zhou.) Pengcheng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zh",
+          "distance": 1.2753480672836304,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of China under Grant 61972168 and in part by the Major Science and Technology Project of Xiamen (Industry and Information Tech- nology Area) under Grant 3502Z20231007. The associate editor coordinating the review of this manuscript and approving it for publication was Dr. Pedro Comesana. (Corresponding author: Hui Tian.) Yiqin Qiu and Hui Tian are with the College of Computer Science and Technology, National Huaqiao University, Xiamen 361021, China, and also with the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.ed",
+          "distance": 1.2818405628204346,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "eng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zhengyang Fang, Zhongliang Yang, and Linna Zhou are with the School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing 100876, China (e-mail: yangzl@bupt.edu.cn; zhoulinna@mail.tsinghua.edu.cn). Zhili Zhou is with the School of Artiﬁcial Intelligence, Guangzhou University, Guangzhou 510006, China. Digital Object Identiﬁer 10.1109/TIFS.2025.3577042 channels, they reduce the statistical distribution di ﬀerences between carriers with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverl",
+          "distance": 1.3256280422210693,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.edu.cn; htian@hqu.edu.cn). Haizhou Li is with the School of Data Science, Shenzhen Research Institute of Big Data, The Chinese University of Hong Kong, Shenzhen 518172, China, also with the Department of Electrical and Computer Engineer- ing, National University of Singapore, Singapore 119077, also with the Faculty of Mathematics/Computer Science, University of Bremen, 28359 Bremen, Germany, and also with Kriston AI, Xiamen 361024, China (e-mail: haizhouli@cuhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichun",
+          "distance": 1.3267838954925537,
+          "retrieval_rank": 11
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverly completes the process of hiding the informa- tion, thereby avoiding suspicion and attack [31]. Typically, a covert system can be modeled as the “prisoners’ problem” [31]. In this model, the sender needs to convey a secret message from a space of secret messages to the receiver. The sender selects any normal carrier from the public channel and uses a key to embed the secret message into the normal carrier. This transforms the original normal carrier into a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subse",
+          "distance": 1.3313136100769043,
+          "retrieval_rank": 12
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "ations established via steganography. As both sides of the game, steganographers and steganalysts are constantly improving their skills. To enhance steganographic security (including imperceptibility and unde- tectability), steganographers try their best to minimize the difference between cover samples (referred to as cover) and steganographic samples (referred to as stego) according to cover characteristics. To avoid the abuse of steganography, steganalysts are committed to distinguishing cover and stego samples to the greatest extent by discovering effective discrim- inative features. With the popularization of V oice over Internet Protocol (V oIP) applications [5], speech stream is widely",
+          "distance": 1.3316168785095215,
+          "retrieval_rank": 13
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "What is the difference between Paper1 and Paper2?",
+          "reason": "The question asks for a comparison between two specific papers, which is a document-based query best handled by the rag tool."
+        },
+        "tool_used": "rag",
+        "tool_input": "What is the difference between Paper1 and Paper2?",
+        "fallback_used": false,
+        "context_sufficient": false,
+        "context_metrics": {
+          "num_chunks": 10,
+          "min_required_chunks": 2,
+          "best_distance": 1.2698,
+          "avg_top_distance": 1.2747,
+          "max_best_distance": 2.2,
+          "max_avg_top_distance": 2.4,
+          "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+          "distance_gate_passed": true,
+          "llm_question_type": "COMPARISON",
+          "llm_gate_mode": "typed_relevance_gate",
+          "llm_relevance_check": false,
+          "llm_relevance_verdict": "NO - The passages only describe Paper1's method and results, with no information about Paper2's content or approach, so a comparison cannot be made.",
+          "llm_relevance_reason": "The passages only describe Paper1's method and results, with no information about Paper2's content or approach, so a comparison cannot be made.",
+          "llm_relevance_error": "",
+          "llm_soft_warning": "",
+          "rerank_used": true,
+          "rerank_fallback": false,
+          "rerank_error": "",
+          "rerank_indices": [
+            8,
+            2,
+            0,
+            5,
+            1,
+            4,
+            9,
+            10,
+            11,
+            12
+          ],
+          "rerank_raw_output": "[8, 2, 0, 5, 1, 4, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 3, 6, 7, 17]",
+          "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "execute_tool",
+          "generate_answer"
+        ]
+      },
+      "context_sufficient": false,
+      "context_metrics": {
+        "num_chunks": 10,
+        "min_required_chunks": 2,
+        "best_distance": 1.2698,
+        "avg_top_distance": 1.2747,
+        "max_best_distance": 2.2,
+        "max_avg_top_distance": 2.4,
+        "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+        "distance_gate_passed": true,
+        "llm_question_type": "COMPARISON",
+        "llm_gate_mode": "typed_relevance_gate",
+        "llm_relevance_check": false,
+        "llm_relevance_verdict": "NO - The passages only describe Paper1's method and results, with no information about Paper2's content or approach, so a comparison cannot be made.",
+        "llm_relevance_reason": "The passages only describe Paper1's method and results, with no information about Paper2's content or approach, so a comparison cannot be made.",
+        "llm_relevance_error": "",
+        "llm_soft_warning": "",
+        "rerank_used": true,
+        "rerank_fallback": false,
+        "rerank_error": "",
+        "rerank_indices": [
+          8,
+          2,
+          0,
+          5,
+          1,
+          4,
+          9,
+          10,
+          11,
+          12
+        ],
+        "rerank_raw_output": "[8, 2, 0, 5, 1, 4, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 3, 6, 7, 17]",
+        "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 10,
+        "counts": {
+          "Paper1.pdf": 7,
+          "Paper2.pdf": 3
+        },
+        "percentages": {
+          "Paper1.pdf": 0.7,
+          "Paper2.pdf": 0.3
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf"
+        ]
+      },
+      "latency_ms": 5771.33,
+      "request_error": "",
+      "failure_mode": "comparison_blocked_by_typed_relevance_gate"
+    },
+    {
+      "id": "q009",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "better",
+        "outperform",
+        "superior",
+        "compare"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "expected_source_coverage": true,
+      "session_id": "baseline-single-rag-20260619-q009",
+      "question": "Which method performs better, the one in Paper1 or Paper2?",
+      "answer": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.239730954170227,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.2418744564056396,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.2441987991333008,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "main separation components in the training process has bol- stered the model’s consideration of the relationships between steganographic domains, resulting in clearer class decision boundaries. Extensive experimental results demonstrate that our method significantly outperforms existing technologies in universal V oIP steganography detection. ICASSP 2025 - 2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) | 979-8-3503-6874-1/25/$31.00 ©2025 IEEE | DOI: 10.1109/ICASSP49660.2025.10890478 Authorized licensed use limited to: National Huaqiao University. Downloaded on November 06,2025 at 12:26:23 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.2738269567489624,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.288437008857727,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "ging a Transformer encoder for V oIP feature extraction and enhancing feature learning through its attention mechanism. By innovatively integrating the Cut- Mix technique, we have facilitated an augmented exchange of information between different steganographic domains, thereby improving the model’s generalization capability. Fur- thermore, we implemented a supervised contrastive learning strategy, using constructed V oIP sample triplets to segregate normal and steganographic features in the latent space, thus enhancing detection precision. Additionally, the inclusion of domain separation components in the training process has bol- stered the model’s consideration of the relationships betwee",
+          "distance": 1.3089531660079956,
+          "retrieval_rank": 17
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "QIM [27] and PMS [29]—the weak correlation features between these methods make it difficult for models to capture shared information. Furthermore, the diversity of steganographic domains presents a challenge in fitting a gen- eralized feature space while maintaining high classification accuracy [32], [33]. Therefore, separating the steganographic domains to clear the class decision boundaries and enhance model generalizability is necessary, yet research in this aspect is currently insufficient. We propose an innovative universal V oIP steganalysis framework, DAEF-VS, leveraging a Transformer encoder for V oIP feature extraction and enhancing feature learning through its attention mechanism.",
+          "distance": 1.29213547706604,
+          "retrieval_rank": 11
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "for VoIP Steganalysis (DAEF-VS), which harnesses the CutMix technology to enhance the shared steganographic domain features and employs the Domain-Aware Learning Model to fine-tune these features, thereby significantly improving generalization capabilities. Extensive experimental results demonstrate that our approach vastly surpasses existing advanced methods in terms of universality across a variety of steganographic detection scenarios. Index Terms—VoIP Steganalysis, Contrastive Learning, Domain-Aware, Generality. I. I NTRODUCTION Steganography [ 1], [2] embeds secret information within public carriers to protect user privacy and is used in various social media forms, such as images [3]–[5",
+          "distance": 1.3114097118377686,
+          "retrieval_rank": 19
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "us ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 2025. Date of publication 10 June 2025; date of current version 20 June 2025. This work was supported in part by the National Natural Science Foundation of China under Grant 62302059 and Grant 62172053. The associate editor coordinating the review of this article and approving it for publication was Prof. Fernando Perez-Gonzalez. (Pengcheng Zhou and Zhengyang Fang contributed equally to this work.) (Corresponding authors: Zhongliang Yang; Linna Zhou.) Pengcheng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zh",
+          "distance": 1.2658222913742065,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganography. That is to say, to realize information hiding, even replacing a normally searched FCB parameter with another suboptimal one will not cause perceptible distortions. Therefore, the FCB parameters have become the darling of steganographers in practice. As the other side of the game, steganalysts have also made many efforts to detect FCB-based steganography. In the early days, researchers used some classical statistical properties of pulse positions, such as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEE",
+          "distance": 1.2752963304519653,
+          "retrieval_rank": 6
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "Which method performs better, the one in Paper1 or Paper2?",
+          "reason": "The question asks for a comparison between methods in two specific papers, which requires retrieving information from the loaded local documents."
+        },
+        "tool_used": "rag",
+        "tool_input": "Which method performs better, the one in Paper1 or Paper2?",
+        "fallback_used": false,
+        "context_sufficient": false,
+        "context_metrics": {
+          "num_chunks": 10,
+          "min_required_chunks": 2,
+          "best_distance": 1.2397,
+          "avg_top_distance": 1.2419,
+          "max_best_distance": 2.2,
+          "max_avg_top_distance": 2.4,
+          "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+          "distance_gate_passed": true,
+          "llm_question_type": "COMPARISON",
+          "llm_gate_mode": "typed_relevance_gate",
+          "llm_relevance_check": false,
+          "llm_relevance_verdict": "NO - The passages only describe Paper1's method and its performance, with no information about Paper2's method or results for comparison.",
+          "llm_relevance_reason": "The passages only describe Paper1's method and its performance, with no information about Paper2's method or results for comparison.",
+          "llm_relevance_error": "",
+          "llm_soft_warning": "",
+          "rerank_used": true,
+          "rerank_fallback": false,
+          "rerank_error": "",
+          "rerank_indices": [
+            0,
+            1,
+            2,
+            4,
+            7,
+            16,
+            10,
+            18,
+            3,
+            5
+          ],
+          "rerank_raw_output": "[0, 1, 2, 4, 7, 16, 10, 18, 3, 5, 6, 8, 9, 11, 12, 13, 14, 15, 17, 19]",
+          "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "execute_tool",
+          "generate_answer"
+        ]
+      },
+      "context_sufficient": false,
+      "context_metrics": {
+        "num_chunks": 10,
+        "min_required_chunks": 2,
+        "best_distance": 1.2397,
+        "avg_top_distance": 1.2419,
+        "max_best_distance": 2.2,
+        "max_avg_top_distance": 2.4,
+        "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+        "distance_gate_passed": true,
+        "llm_question_type": "COMPARISON",
+        "llm_gate_mode": "typed_relevance_gate",
+        "llm_relevance_check": false,
+        "llm_relevance_verdict": "NO - The passages only describe Paper1's method and its performance, with no information about Paper2's method or results for comparison.",
+        "llm_relevance_reason": "The passages only describe Paper1's method and its performance, with no information about Paper2's method or results for comparison.",
+        "llm_relevance_error": "",
+        "llm_soft_warning": "",
+        "rerank_used": true,
+        "rerank_fallback": false,
+        "rerank_error": "",
+        "rerank_indices": [
+          0,
+          1,
+          2,
+          4,
+          7,
+          16,
+          10,
+          18,
+          3,
+          5
+        ],
+        "rerank_raw_output": "[0, 1, 2, 4, 7, 16, 10, 18, 3, 5, 6, 8, 9, 11, 12, 13, 14, 15, 17, 19]",
+        "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 10,
+        "counts": {
+          "Paper1.pdf": 5,
+          "Paper2.pdf": 1,
+          "Paper3.pdf": 4
+        },
+        "percentages": {
+          "Paper1.pdf": 0.5,
+          "Paper2.pdf": 0.1,
+          "Paper3.pdf": 0.4
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "latency_ms": 5387.07,
+      "request_error": "",
+      "failure_mode": "comparison_blocked_by_typed_relevance_gate"
+    },
+    {
+      "id": "q010",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "complementary",
+        "competing",
+        "similar",
+        "different"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "expected_source_coverage": false,
+      "session_id": "baseline-single-rag-20260619-q010",
+      "question": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+      "answer": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.248673677444458,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.2016016244888306,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.2156436443328857,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.2341676950454712,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "QIM [27] and PMS [29]—the weak correlation features between these methods make it difficult for models to capture shared information. Furthermore, the diversity of steganographic domains presents a challenge in fitting a gen- eralized feature space while maintaining high classification accuracy [32], [33]. Therefore, separating the steganographic domains to clear the class decision boundaries and enhance model generalizability is necessary, yet research in this aspect is currently insufficient. We propose an innovative universal V oIP steganalysis framework, DAEF-VS, leveraging a Transformer encoder for V oIP feature extraction and enhancing feature learning through its attention mechanism.",
+          "distance": 1.2088271379470825,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "ging a Transformer encoder for V oIP feature extraction and enhancing feature learning through its attention mechanism. By innovatively integrating the Cut- Mix technique, we have facilitated an augmented exchange of information between different steganographic domains, thereby improving the model’s generalization capability. Fur- thermore, we implemented a supervised contrastive learning strategy, using constructed V oIP sample triplets to segregate normal and steganographic features in the latent space, thus enhancing detection precision. Additionally, the inclusion of domain separation components in the training process has bol- stered the model’s consideration of the relationships betwee",
+          "distance": 1.2583587169647217,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "for VoIP Steganalysis (DAEF-VS), which harnesses the CutMix technology to enhance the shared steganographic domain features and employs the Domain-Aware Learning Model to fine-tune these features, thereby significantly improving generalization capabilities. Extensive experimental results demonstrate that our approach vastly surpasses existing advanced methods in terms of universality across a variety of steganographic detection scenarios. Index Terms—VoIP Steganalysis, Contrastive Learning, Domain-Aware, Generality. I. I NTRODUCTION Steganography [ 1], [2] embeds secret information within public carriers to protect user privacy and is used in various social media forms, such as images [3]–[5",
+          "distance": 1.2692779302597046,
+          "retrieval_rank": 16
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "as supported in part by the National Key Research and Development Program of China under Grant 2023YFC3305401, Grant 2023YFC3305402 and in part by the National Natural Science Foundation of China (Nos.62302059 and 62172053). deficiencies when confronted with the diversity of stegano- graphic techniques encountered in real-world applications. This is principally because they fail to account for the intrin- sic distribution relationships between different steganography technologies, leading to biased feature extraction and affecting their generalizability. To overcome the limitations of existing technologies, it has become necessary to explore a universal steganalysis scheme capable of detecti",
+          "distance": 1.224709391593933,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "itations of existing technologies, it has become necessary to explore a universal steganalysis scheme capable of detecting a multitude of V oIP steganogra- phy techniques. Approaches such as the codeword embedding method proposed by Li et al. [25], and the universal detection method based on feature correlation mining by Wang et al. [26], have been put forward. However, facing the two main categories of V oIP steganography techniques—those hiding information within LPC encoding [6], [27], [28], and those embedding messages in pitch period predictions [29]–[31], such as CNV-QIM [27] and PMS [29]—the weak correlation features between these methods make it difficult for models to capture shared",
+          "distance": 1.2350038290023804,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "main separation components in the training process has bol- stered the model’s consideration of the relationships between steganographic domains, resulting in clearer class decision boundaries. Extensive experimental results demonstrate that our method significantly outperforms existing technologies in universal V oIP steganography detection. ICASSP 2025 - 2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) | 979-8-3503-6874-1/25/$31.00 ©2025 IEEE | DOI: 10.1109/ICASSP49660.2025.10890478 Authorized licensed use limited to: National Huaqiao University. Downloaded on November 06,2025 at 12:26:23 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.206825613975525,
+          "retrieval_rank": 2
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+          "reason": "The question asks about comparing approaches in specific local papers, which requires document retrieval."
+        },
+        "tool_used": "rag",
+        "tool_input": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+        "fallback_used": false,
+        "context_sufficient": false,
+        "context_metrics": {
+          "num_chunks": 10,
+          "min_required_chunks": 2,
+          "best_distance": 1.2016,
+          "avg_top_distance": 1.2058,
+          "max_best_distance": 2.2,
+          "max_avg_top_distance": 2.4,
+          "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+          "distance_gate_passed": true,
+          "llm_question_type": "COMPARISON",
+          "llm_gate_mode": "typed_relevance_gate",
+          "llm_relevance_check": false,
+          "llm_relevance_verdict": "NO - The passages only describe Paper1's approach and mention Paper3 in a different context, lacking information about Paper2 for comparison.",
+          "llm_relevance_reason": "The passages only describe Paper1's approach and mention Paper3 in a different context, lacking information about Paper2 for comparison.",
+          "llm_relevance_error": "",
+          "llm_soft_warning": "",
+          "rerank_used": true,
+          "rerank_fallback": false,
+          "rerank_error": "",
+          "rerank_indices": [
+            7,
+            0,
+            3,
+            5,
+            2,
+            9,
+            15,
+            4,
+            6,
+            1
+          ],
+          "rerank_raw_output": "[7, 0, 3, 5, 2, 9, 15, 4, 6, 1, 8, 12, 10, 11, 13, 14, 16, 17, 18, 19]",
+          "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "execute_tool",
+          "generate_answer"
+        ]
+      },
+      "context_sufficient": false,
+      "context_metrics": {
+        "num_chunks": 10,
+        "min_required_chunks": 2,
+        "best_distance": 1.2016,
+        "avg_top_distance": 1.2058,
+        "max_best_distance": 2.2,
+        "max_avg_top_distance": 2.4,
+        "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+        "distance_gate_passed": true,
+        "llm_question_type": "COMPARISON",
+        "llm_gate_mode": "typed_relevance_gate",
+        "llm_relevance_check": false,
+        "llm_relevance_verdict": "NO - The passages only describe Paper1's approach and mention Paper3 in a different context, lacking information about Paper2 for comparison.",
+        "llm_relevance_reason": "The passages only describe Paper1's approach and mention Paper3 in a different context, lacking information about Paper2 for comparison.",
+        "llm_relevance_error": "",
+        "llm_soft_warning": "",
+        "rerank_used": true,
+        "rerank_fallback": false,
+        "rerank_error": "",
+        "rerank_indices": [
+          7,
+          0,
+          3,
+          5,
+          2,
+          9,
+          15,
+          4,
+          6,
+          1
+        ],
+        "rerank_raw_output": "[7, 0, 3, 5, 2, 9, 15, 4, 6, 1, 8, 12, 10, 11, 13, 14, 16, 17, 18, 19]",
+        "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 10,
+        "counts": {
+          "Paper1.pdf": 4,
+          "Paper3.pdf": 6
+        },
+        "percentages": {
+          "Paper1.pdf": 0.4,
+          "Paper3.pdf": 0.6
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "latency_ms": 4916.04,
+      "request_error": "",
+      "failure_mode": "comparison_blocked_by_typed_relevance_gate"
+    },
+    {
+      "id": "q019",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "assume",
+        "assumption",
+        "common",
+        "share",
+        "both"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "expected_source_coverage": false,
+      "session_id": "baseline-single-rag-20260619-q019",
+      "question": "What are the shared assumptions between Paper1 and Paper2?",
+      "answer": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.2315185070037842,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.2454246282577515,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqiao University. Downloaded on July 03,2025 at 06:47:41 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.2263437509536743,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "main separation components in the training process has bol- stered the model’s consideration of the relationships between steganographic domains, resulting in clearer class decision boundaries. Extensive experimental results demonstrate that our method significantly outperforms existing technologies in universal V oIP steganography detection. ICASSP 2025 - 2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) | 979-8-3503-6874-1/25/$31.00 ©2025 IEEE | DOI: 10.1109/ICASSP49660.2025.10890478 Authorized licensed use limited to: National Huaqiao University. Downloaded on November 06,2025 at 12:26:23 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.258571743965149,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "QIM [27] and PMS [29]—the weak correlation features between these methods make it difficult for models to capture shared information. Furthermore, the diversity of steganographic domains presents a challenge in fitting a gen- eralized feature space while maintaining high classification accuracy [32], [33]. Therefore, separating the steganographic domains to clear the class decision boundaries and enhance model generalizability is necessary, yet research in this aspect is currently insufficient. We propose an innovative universal V oIP steganalysis framework, DAEF-VS, leveraging a Transformer encoder for V oIP feature extraction and enhancing feature learning through its attention mechanism.",
+          "distance": 1.2604795694351196,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "itations of existing technologies, it has become necessary to explore a universal steganalysis scheme capable of detecting a multitude of V oIP steganogra- phy techniques. Approaches such as the codeword embedding method proposed by Li et al. [25], and the universal detection method based on feature correlation mining by Wang et al. [26], have been put forward. However, facing the two main categories of V oIP steganography techniques—those hiding information within LPC encoding [6], [27], [28], and those embedding messages in pitch period predictions [29]–[31], such as CNV-QIM [27] and PMS [29]—the weak correlation features between these methods make it difficult for models to capture shared",
+          "distance": 1.2941704988479614,
+          "retrieval_rank": 14
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "as supported in part by the National Key Research and Development Program of China under Grant 2023YFC3305401, Grant 2023YFC3305402 and in part by the National Natural Science Foundation of China (Nos.62302059 and 62172053). deficiencies when confronted with the diversity of stegano- graphic techniques encountered in real-world applications. This is principally because they fail to account for the intrin- sic distribution relationships between different steganography technologies, leading to biased feature extraction and affecting their generalizability. To overcome the limitations of existing technologies, it has become necessary to explore a universal steganalysis scheme capable of detecti",
+          "distance": 1.2672218084335327,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "DAEF-VS: An Efficient Universal V oIP Steganalysis Framework Based on Domain-Aware Knowledge ZhengYang Fang1†, Pengcheng Zhou 2†, Zhongliang Yang 1∗, Zhili Zhou 3 and Linna Zhou 1 1School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing, China 2School of Information and Communication Engineering, Beijing University of Posts and Telecommunications, Beijing, China 3School of Artificial Intelligence, Guangzhou University, Guangzhou, China yangzl@bupt.edu.cn Abstract—In recent years, research on information-hiding techniques based on network streaming media has focused on how to covertly embed secret information within real-time transmissions to achieve clandes",
+          "distance": 1.301345705986023,
+          "retrieval_rank": 19
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.2989184856414795,
+          "retrieval_rank": 18
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.291752576828003,
+          "retrieval_rank": 13
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "What are the shared assumptions between Paper1 and Paper2?",
+          "reason": "The question asks about assumptions in specific local papers (Paper1 and Paper2), requiring retrieval from the loaded documents."
+        },
+        "tool_used": "rag",
+        "tool_input": "What are the shared assumptions between Paper1 and Paper2?",
+        "fallback_used": false,
+        "context_sufficient": false,
+        "context_metrics": {
+          "num_chunks": 10,
+          "min_required_chunks": 2,
+          "best_distance": 1.2263,
+          "avg_top_distance": 1.2344,
+          "max_best_distance": 2.2,
+          "max_avg_top_distance": 2.4,
+          "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+          "distance_gate_passed": true,
+          "llm_question_type": "COMPARISON",
+          "llm_gate_mode": "typed_relevance_gate",
+          "llm_relevance_check": false,
+          "llm_relevance_verdict": "NO - The passages only discuss individual papers' methods and features, but do not provide information about shared assumptions between Paper1 and Paper2.",
+          "llm_relevance_reason": "The passages only discuss individual papers' methods and features, but do not provide information about shared assumptions between Paper1 and Paper2.",
+          "llm_relevance_error": "",
+          "llm_soft_warning": "",
+          "rerank_used": true,
+          "rerank_fallback": false,
+          "rerank_error": "",
+          "rerank_indices": [
+            2,
+            3,
+            0,
+            5,
+            6,
+            13,
+            8,
+            18,
+            17,
+            12
+          ],
+          "rerank_raw_output": "[2, 3, 0, 5, 6, 13, 8, 18, 17, 12, 1, 4, 7, 9, 10, 11, 14, 15, 16, 19]",
+          "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "execute_tool",
+          "generate_answer"
+        ]
+      },
+      "context_sufficient": false,
+      "context_metrics": {
+        "num_chunks": 10,
+        "min_required_chunks": 2,
+        "best_distance": 1.2263,
+        "avg_top_distance": 1.2344,
+        "max_best_distance": 2.2,
+        "max_avg_top_distance": 2.4,
+        "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+        "distance_gate_passed": true,
+        "llm_question_type": "COMPARISON",
+        "llm_gate_mode": "typed_relevance_gate",
+        "llm_relevance_check": false,
+        "llm_relevance_verdict": "NO - The passages only discuss individual papers' methods and features, but do not provide information about shared assumptions between Paper1 and Paper2.",
+        "llm_relevance_reason": "The passages only discuss individual papers' methods and features, but do not provide information about shared assumptions between Paper1 and Paper2.",
+        "llm_relevance_error": "",
+        "llm_soft_warning": "",
+        "rerank_used": true,
+        "rerank_fallback": false,
+        "rerank_error": "",
+        "rerank_indices": [
+          2,
+          3,
+          0,
+          5,
+          6,
+          13,
+          8,
+          18,
+          17,
+          12
+        ],
+        "rerank_raw_output": "[2, 3, 0, 5, 6, 13, 8, 18, 17, 12, 1, 4, 7, 9, 10, 11, 14, 15, 16, 19]",
+        "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 10,
+        "counts": {
+          "Paper1.pdf": 5,
+          "Paper3.pdf": 5
+        },
+        "percentages": {
+          "Paper1.pdf": 0.5,
+          "Paper3.pdf": 0.5
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "latency_ms": 5908.07,
+      "request_error": "",
+      "failure_mode": "comparison_blocked_by_typed_relevance_gate"
+    },
+    {
+      "id": "q020",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "same",
+        "problem",
+        "research",
+        "address",
+        "focus"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "expected_source_coverage": false,
+      "session_id": "baseline-single-rag-20260619-q020",
+      "question": "Do Paper1 and Paper2 address the same research problem?",
+      "answer": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。",
+      "chunks": [
+        {
+          "source": "Paper3.pdf",
+          "text": "QIM [27] and PMS [29]—the weak correlation features between these methods make it difficult for models to capture shared information. Furthermore, the diversity of steganographic domains presents a challenge in fitting a gen- eralized feature space while maintaining high classification accuracy [32], [33]. Therefore, separating the steganographic domains to clear the class decision boundaries and enhance model generalizability is necessary, yet research in this aspect is currently insufficient. We propose an innovative universal V oIP steganalysis framework, DAEF-VS, leveraging a Transformer encoder for V oIP feature extraction and enhancing feature learning through its attention mechanism.",
+          "distance": 1.2290140390396118,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "DAEF-VS: An Efficient Universal V oIP Steganalysis Framework Based on Domain-Aware Knowledge ZhengYang Fang1†, Pengcheng Zhou 2†, Zhongliang Yang 1∗, Zhili Zhou 3 and Linna Zhou 1 1School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing, China 2School of Information and Communication Engineering, Beijing University of Posts and Telecommunications, Beijing, China 3School of Artificial Intelligence, Guangzhou University, Guangzhou, China yangzl@bupt.edu.cn Abstract—In recent years, research on information-hiding techniques based on network streaming media has focused on how to covertly embed secret information within real-time transmissions to achieve clandes",
+          "distance": 1.283708930015564,
+          "retrieval_rank": 16
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "ging a Transformer encoder for V oIP feature extraction and enhancing feature learning through its attention mechanism. By innovatively integrating the Cut- Mix technique, we have facilitated an augmented exchange of information between different steganographic domains, thereby improving the model’s generalization capability. Fur- thermore, we implemented a supervised contrastive learning strategy, using constructed V oIP sample triplets to segregate normal and steganographic features in the latent space, thus enhancing detection precision. Additionally, the inclusion of domain separation components in the training process has bol- stered the model’s consideration of the relationships betwee",
+          "distance": 1.288964033126831,
+          "retrieval_rank": 18
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "for VoIP Steganalysis (DAEF-VS), which harnesses the CutMix technology to enhance the shared steganographic domain features and employs the Domain-Aware Learning Model to fine-tune these features, thereby significantly improving generalization capabilities. Extensive experimental results demonstrate that our approach vastly surpasses existing advanced methods in terms of universality across a variety of steganographic detection scenarios. Index Terms—VoIP Steganalysis, Contrastive Learning, Domain-Aware, Generality. I. I NTRODUCTION Steganography [ 1], [2] embeds secret information within public carriers to protect user privacy and is used in various social media forms, such as images [3]–[5",
+          "distance": 1.279067873954773,
+          "retrieval_rank": 14
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "main separation components in the training process has bol- stered the model’s consideration of the relationships between steganographic domains, resulting in clearer class decision boundaries. Extensive experimental results demonstrate that our method significantly outperforms existing technologies in universal V oIP steganography detection. ICASSP 2025 - 2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) | 979-8-3503-6874-1/25/$31.00 ©2025 IEEE | DOI: 10.1109/ICASSP49660.2025.10890478 Authorized licensed use limited to: National Huaqiao University. Downloaded on November 06,2025 at 12:26:23 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.241879940032959,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "itations of existing technologies, it has become necessary to explore a universal steganalysis scheme capable of detecting a multitude of V oIP steganogra- phy techniques. Approaches such as the codeword embedding method proposed by Li et al. [25], and the universal detection method based on feature correlation mining by Wang et al. [26], have been put forward. However, facing the two main categories of V oIP steganography techniques—those hiding information within LPC encoding [6], [27], [28], and those embedding messages in pitch period predictions [29]–[31], such as CNV-QIM [27] and PMS [29]—the weak correlation features between these methods make it difficult for models to capture shared",
+          "distance": 1.2712825536727905,
+          "retrieval_rank": 12
+        },
+        {
+          "source": "Paper3.pdf",
+          "text": "as supported in part by the National Key Research and Development Program of China under Grant 2023YFC3305401, Grant 2023YFC3305402 and in part by the National Natural Science Foundation of China (Nos.62302059 and 62172053). deficiencies when confronted with the diversity of stegano- graphic techniques encountered in real-world applications. This is principally because they fail to account for the intrin- sic distribution relationships between different steganography technologies, leading to biased feature extraction and affecting their generalizability. To overcome the limitations of existing technologies, it has become necessary to explore a universal steganalysis scheme capable of detecti",
+          "distance": 1.229015588760376,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.2339729070663452,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.208425760269165,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.2235177755355835,
+          "retrieval_rank": 2
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "Do Paper1 and Paper2 address the same research problem?",
+          "reason": "The question asks about comparing two papers, which requires document retrieval and analysis from the loaded local papers."
+        },
+        "tool_used": "rag",
+        "tool_input": "Do Paper1 and Paper2 address the same research problem?",
+        "fallback_used": false,
+        "context_sufficient": false,
+        "context_metrics": {
+          "num_chunks": 10,
+          "min_required_chunks": 2,
+          "best_distance": 1.2084,
+          "avg_top_distance": 1.2203,
+          "max_best_distance": 2.2,
+          "max_avg_top_distance": 2.4,
+          "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+          "distance_gate_passed": true,
+          "llm_question_type": "COMPARISON",
+          "llm_gate_mode": "typed_relevance_gate",
+          "llm_relevance_check": false,
+          "llm_relevance_verdict": "NO - The passages are only about Paper3 (DAEF-VS) and do not mention Paper1 or Paper2, so there is no information to compare whether they address the same research problem.",
+          "llm_relevance_reason": "The passages are only about Paper3 (DAEF-VS) and do not mention Paper1 or Paper2, so there is no information to compare whether they address the same research problem.",
+          "llm_relevance_error": "",
+          "llm_soft_warning": "",
+          "rerank_used": true,
+          "rerank_fallback": false,
+          "rerank_error": "",
+          "rerank_indices": [
+            2,
+            15,
+            17,
+            13,
+            7,
+            11,
+            3,
+            5,
+            0,
+            1
+          ],
+          "rerank_raw_output": "[2, 15, 17, 13, 7, 11, 3, 5, 0, 1, 8, 4, 6, 9, 10, 12, 14, 16, 18, 19]",
+          "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "execute_tool",
+          "generate_answer"
+        ]
+      },
+      "context_sufficient": false,
+      "context_metrics": {
+        "num_chunks": 10,
+        "min_required_chunks": 2,
+        "best_distance": 1.2084,
+        "avg_top_distance": 1.2203,
+        "max_best_distance": 2.2,
+        "max_avg_top_distance": 2.4,
+        "reason": "Retrieved chunks meet the lightweight distance-based sufficiency rule.",
+        "distance_gate_passed": true,
+        "llm_question_type": "COMPARISON",
+        "llm_gate_mode": "typed_relevance_gate",
+        "llm_relevance_check": false,
+        "llm_relevance_verdict": "NO - The passages are only about Paper3 (DAEF-VS) and do not mention Paper1 or Paper2, so there is no information to compare whether they address the same research problem.",
+        "llm_relevance_reason": "The passages are only about Paper3 (DAEF-VS) and do not mention Paper1 or Paper2, so there is no information to compare whether they address the same research problem.",
+        "llm_relevance_error": "",
+        "llm_soft_warning": "",
+        "rerank_used": true,
+        "rerank_fallback": false,
+        "rerank_error": "",
+        "rerank_indices": [
+          2,
+          15,
+          17,
+          13,
+          7,
+          11,
+          3,
+          5,
+          0,
+          1
+        ],
+        "rerank_raw_output": "[2, 15, 17, 13, 7, 11, 3, 5, 0, 1, 8, 4, 6, 9, 10, 12, 14, 16, 18, 19]",
+        "final_sufficiency_reason": "Context passed the distance gate but failed the typed LLM relevance gate for COMPARISON question."
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 10,
+        "counts": {
+          "Paper1.pdf": 3,
+          "Paper3.pdf": 7
+        },
+        "percentages": {
+          "Paper1.pdf": 0.3,
+          "Paper3.pdf": 0.7
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "latency_ms": 5476.67,
+      "request_error": "",
+      "failure_mode": "comparison_blocked_by_typed_relevance_gate"
+    }
+  ]
+}

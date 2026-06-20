@@ -172,9 +172,41 @@ class MilvusVectorStore(BaseVectorStore):
             f"into collection={self.collection_name}"
         )
 
-    def search(self, query: str, k: int = 5) -> list[dict]:
+    def _collect_search_results(
+        self,
+        raw_hits: list[dict],
+        k: int,
+        source: str | None,
+    ) -> list[dict]:
+        results = []
+
+        for item in raw_hits:
+            entity = item.get("entity", {})
+            chunk_source = entity.get("source", "unknown")
+
+            if source is not None and chunk_source != source:
+                continue
+
+            chunk = {
+                "source": chunk_source,
+                "text": entity.get("text", ""),
+                "chunk_id": entity.get("chunk_id"),
+                "distance": float(item.get("distance", 0.0)),
+                "retrieval_rank": len(results) + 1,
+            }
+            results.append(chunk)
+
+            if len(results) >= k:
+                break
+
+        return results
+
+    def search(self, query: str, k: int = 5, source: str | None = None) -> list[dict]:
         """
         Search top-k related chunks from Milvus.
+
+        When source is set, request a larger candidate pool and post-filter in
+        Python (no Milvus filter expression yet).
 
         Return format must stay compatible with RAGSystem:
         [
@@ -193,10 +225,18 @@ class MilvusVectorStore(BaseVectorStore):
 
         query_vec = get_embedding(query).tolist()
 
+        if source is None:
+            fetch_limit = k
+        else:
+            fetch_limit = min(
+                len(self.chunks),
+                max(k, k * 20),
+            )
+
         raw_results = self.client.search(
             collection_name=self.collection_name,
             data=[query_vec],
-            limit=k,
+            limit=fetch_limit,
             output_fields=["text", "source", "chunk_id"],
         )
 
@@ -204,32 +244,33 @@ class MilvusVectorStore(BaseVectorStore):
 
         if not raw_results:
             logger.warning(
-                f"[MilvusVectorStore.search] query='{query}', empty search result"
+                f"[MilvusVectorStore.search] query='{query}', source={source!r}, "
+                f"empty search result"
             )
             return results
 
-        for rank, item in enumerate(raw_results[0], start=1):
-            entity = item.get("entity", {})
+        results = self._collect_search_results(raw_results[0], k, source)
 
-            chunk = {
-                "source": entity.get("source", "unknown"),
-                "text": entity.get("text", ""),
-                "chunk_id": entity.get("chunk_id"),
-                "distance": float(item.get("distance", 0.0)),
-                "retrieval_rank": rank,
-            }
-
-            results.append(chunk)
+        if source is not None and len(results) < k and fetch_limit < len(self.chunks):
+            raw_results = self.client.search(
+                collection_name=self.collection_name,
+                data=[query_vec],
+                limit=len(self.chunks),
+                output_fields=["text", "source", "chunk_id"],
+            )
+            if raw_results:
+                results = self._collect_search_results(raw_results[0], k, source)
 
         if results:
             best_distance = min(c["distance"] for c in results)
             logger.info(
-                f"[MilvusVectorStore.search] query='{query}', "
+                f"[MilvusVectorStore.search] query='{query}', source={source!r}, "
                 f"returned={len(results)}, best_distance={best_distance:.4f}"
             )
         else:
             logger.warning(
-                f"[MilvusVectorStore.search] query='{query}', no valid chunks returned"
+                f"[MilvusVectorStore.search] query='{query}', source={source!r}, "
+                f"no valid chunks returned"
             )
 
         return results

@@ -7,5 +7,5 @@ class BaseVectorStore(ABC):
         pass
 
     @abstractmethod
-    def search(self, query: str, k: int = 5) -> list[dict]:
+    def search(self, query: str, k: int = 5, source: str | None = None) -> list[dict]:
         pass

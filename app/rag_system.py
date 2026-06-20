@@ -31,8 +31,8 @@ class RAGSystem:
     def build_index(self):
         self.vector_store.build(self.chunks)
 
-    def retrieve(self, query, k=5):
-        return self.vector_store.search(query, k)
+    def retrieve(self, query, k=5, source: str | None = None):
+        return self.vector_store.search(query, k, source=source)
 
     def assess_context_sufficiency(self, retrieved_chunks):
         """
@@ -379,11 +379,11 @@ class RAGSystem:
 
             return fallback_indices
 
-    def ask_with_trace(self, question, chat_history=None):
+    def ask_with_trace(self, question, chat_history=None, source: str | None = None):
         if chat_history is None:
             chat_history = []
 
-        retrieved = self.retrieve(question, k=self.top_k)
+        retrieved = self.retrieve(question, k=self.top_k, source=source)
 
         # rerank（用 text）
         texts = [c["text"] for c in retrieved]

@@ -10,6 +10,8 @@ from app.vector_store.base import BaseVectorStore
 
 logger = setup_logger()
 
+SOURCE_FILTER_OVER_FETCH_FACTOR = 20
+
 
 class FaissVectorStore(BaseVectorStore):
     def __init__(self):
@@ -51,9 +53,41 @@ class FaissVectorStore(BaseVectorStore):
             f"chunks={len(self.chunks)}, dim={dim}"
         )
 
-    def search(self, query: str, k: int = 5) -> list[dict]:
+    def _collect_search_results(
+        self,
+        distances,
+        indices,
+        k: int,
+        source: str | None,
+    ) -> list[dict]:
+        results = []
+
+        for idx, distance in zip(indices[0], distances[0]):
+            idx = int(idx)
+
+            if idx < 0 or idx >= len(self.chunks):
+                continue
+
+            chunk = dict(self.chunks[idx])
+
+            if source is not None and chunk.get("source") != source:
+                continue
+
+            chunk["distance"] = float(distance)
+            chunk["retrieval_rank"] = len(results) + 1
+            results.append(chunk)
+
+            if len(results) >= k:
+                break
+
+        return results
+
+    def search(self, query: str, k: int = 5, source: str | None = None) -> list[dict]:
         """
         Search top-k related chunks from FAISS.
+
+        When source is set, over-fetch from FAISS then post-filter in Python so
+        top-k results are restricted to that document.
 
         Return format must stay compatible with RAGSystem:
         [
@@ -74,32 +108,34 @@ class FaissVectorStore(BaseVectorStore):
 
         k = min(k, len(self.chunks))
 
+        if source is None:
+            fetch_k = k
+        else:
+            fetch_k = min(
+                len(self.chunks),
+                max(k, k * SOURCE_FILTER_OVER_FETCH_FACTOR),
+            )
+
         query_vec = get_embedding(query).reshape(1, -1).astype("float32")
-        distances, indices = self.index.search(query_vec, k)
+        distances, indices = self.index.search(query_vec, fetch_k)
 
-        results = []
+        results = self._collect_search_results(distances, indices, k, source)
 
-        for rank, (idx, distance) in enumerate(zip(indices[0], distances[0]), start=1):
-            idx = int(idx)
-
-            if idx < 0 or idx >= len(self.chunks):
-                continue
-
-            chunk = dict(self.chunks[idx])
-            chunk["distance"] = float(distance)
-            chunk["retrieval_rank"] = rank
-
-            results.append(chunk)
+        if source is not None and len(results) < k and fetch_k < len(self.chunks):
+            distances, indices = self.index.search(query_vec, len(self.chunks))
+            results = self._collect_search_results(distances, indices, k, source)
 
         if results:
             best_distance = min(c["distance"] for c in results)
             logger.info(
                 f"[FaissVectorStore.search] query='{query}', "
-                f"returned={len(results)}, best_distance={best_distance:.4f}"
+                f"source={source!r}, returned={len(results)}, "
+                f"best_distance={best_distance:.4f}"
             )
         else:
             logger.warning(
-                f"[FaissVectorStore.search] query='{query}', no valid chunks returned"
+                f"[FaissVectorStore.search] query='{query}', source={source!r}, "
+                f"no valid chunks returned"
             )
 
         return results

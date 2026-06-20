@@ -55,3 +55,23 @@ class AgentState(TypedDict, total=False):
 
     # 预留错误字段，后面做异常兜底会用到
     error: str
+
+    # 问题类型（BROAD / SPECIFIC / COMPARISON / UNKNOWN）
+    # 写入：planner_node；读取：answer_worker_node、synthesizer_node
+    question_type: str
+
+    # 子任务列表，每项描述一次按 source 或子问题拆分的检索/回答任务
+    # 写入：planner_node；读取：answer_worker_node
+    subtasks: list[dict[str, Any]]
+
+    # 各子任务对应的检索结果与局部答案
+    # 写入：answer_worker_node；读取：synthesizer_node
+    sub_answers: list[dict[str, Any]]
+
+    # 当前知识库中真实存在的论文 source 列表（如 Paper1.pdf）
+    # 写入：AgentWorkflow 或 planner_node；读取：planner_node、answer_worker_node
+    available_sources: list[str]
+
+    # 证据校验结果，v1 预留，供未来 Evidence Verifier / Citation Checker 使用
+    # 写入/读取：v1 暂不使用
+    verification: dict[str, Any]

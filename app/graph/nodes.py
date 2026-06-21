@@ -341,7 +341,29 @@ def generate_answer_node(state: AgentState) -> AgentState:
             "workflow_path": workflow_path
         }
 
-    tool_result = state["tool_result"]
+    if "final_answer" in state and "tool_result" not in state:
+        logger.info(
+            "[generate_answer_node] passthrough existing final_answer from upstream node"
+        )
+        return {
+            "final_answer": state.get("final_answer", ""),
+            "retrieved_chunks": state.get("retrieved_chunks", []),
+            "context_sufficient": state.get("context_sufficient"),
+            "context_metrics": state.get("context_metrics", {}),
+            "workflow_path": workflow_path,
+        }
+
+    tool_result = state.get("tool_result")
+    if tool_result is None:
+        logger.warning("[generate_answer_node] no final_answer or tool_result found")
+        return {
+            "final_answer": "系统没有生成可用答案。",
+            "retrieved_chunks": [],
+            "context_sufficient": state.get("context_sufficient"),
+            "context_metrics": state.get("context_metrics", {}),
+            "workflow_path": workflow_path,
+        }
+
     logger.info(f"[generate_answer_node] final_answer: {tool_result['tool_output']}")
 
     output = tool_result["tool_output"]

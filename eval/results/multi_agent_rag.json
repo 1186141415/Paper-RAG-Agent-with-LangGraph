@@ -1,0 +1,1600 @@
+{
+  "run_name": "multi_agent_rag",
+  "run_id": "multi-agent-rag-20260621",
+  "created_at": "2026-06-21T11:45:52.988227+00:00",
+  "api_base_url": "http://127.0.0.1:8000",
+  "endpoint": "http://127.0.0.1:8000/ask",
+  "question_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\baseline_comparison_questions.json",
+  "results_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\results\\multi_agent_rag.json",
+  "summary_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\results\\multi_agent_rag_summary.md",
+  "baseline_json_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\results\\baseline_single_rag.json",
+  "baseline_summary_file": "D:\\Paper-RAG-Agent-with-LangGraph\\eval\\results\\baseline_single_rag_summary.md",
+  "notes": [
+    "This run evaluates the current Planner -> Answer Worker -> Synthesizer RAG path through the existing FastAPI /ask endpoint.",
+    "It intentionally reuses eval/baseline_comparison_questions.json and writes separate multi_agent_rag outputs.",
+    "It does not overwrite baseline_single_rag.json."
+  ],
+  "aggregate": {
+    "total_questions": 5,
+    "context_sufficient_count": 3,
+    "context_sufficient_rate": 0.6,
+    "expected_source_coverage_count": 5,
+    "expected_source_coverage_rate": 1.0,
+    "paper3_pollution_count": 0,
+    "paper3_pollution_rate": 0.0,
+    "workflow_multi_agent_count": 5,
+    "multi_agent_metric_count": 5,
+    "relevance_gate_rejected_count": 0,
+    "outcomes": {
+      "multi_agent_answered_with_expected_sources": 3,
+      "multi_agent_insufficient_context": 2
+    }
+  },
+  "baseline_comparison": {
+    "baseline_available": true,
+    "baseline": {
+      "total_questions": 5,
+      "paper3_pollution_count": 4,
+      "expected_source_coverage_count": 2,
+      "context_sufficient_count": 0,
+      "relevance_gate_rejected_count": 5,
+      "workflow_multi_agent_count": 0
+    },
+    "multi_agent": {
+      "total_questions": 5,
+      "paper3_pollution_count": 0,
+      "expected_source_coverage_count": 5,
+      "context_sufficient_count": 3,
+      "relevance_gate_rejected_count": 0,
+      "workflow_multi_agent_count": 5
+    },
+    "delta": {
+      "paper3_pollution_count": -4,
+      "expected_source_coverage_count": 3,
+      "context_sufficient_count": 3,
+      "relevance_gate_rejected_count": -5,
+      "workflow_multi_agent_count": 5
+    }
+  },
+  "results": [
+    {
+      "id": "q008",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "difference",
+        "compare",
+        "whereas",
+        "in contrast"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "session_id": "multi-agent-rag-20260621-q008",
+      "question": "What is the difference between Paper1 and Paper2?",
+      "answer": "The main difference between Paper1 and Paper2 lies in their focus and methodology for speech steganalysis. Paper1 introduces **SepSteNet with DPES**, a method centered on a separable convolution network with a dual-stream pyramid enhanced strategy to capture pulse correspondence and cross-domain coherence features, significantly outperforming existing methods [Source: Paper1.pdf]. In contrast, Paper2 presents the **Dual-View VoIP Steganalysis Framework (DVSF)**, which specifically targets challenges like low embedding rates (e.g., 10%) and short transmission durations (e.g., 0.1s) by using random obfuscation, fine-grained local feature capture, and triplet adjustment to improve detection accuracy in those scenarios [Source: Paper2.pdf].\n\nA similarity is that both papers claim their methods surpass existing state-of-the-art approaches in speech steganalysis [Source: Paper1.pdf][Source: Paper2.pdf]. However, Paper1 emphasizes generality by showing its DPES strategy can enhance other deep neural networks, while Paper2 focuses on near-real-time performance under difficult streaming conditions [Source: Paper1.pdf][Source: Paper2.pdf].",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.319156527519226,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.2908052206039429,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.2596720457077026,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.2757537364959717,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of China under Grant 61972168 and in part by the Major Science and Technology Project of Xiamen (Industry and Information Tech- nology Area) under Grant 3502Z20231007. The associate editor coordinating the review of this manuscript and approving it for publication was Dr. Pedro Comesana. (Corresponding author: Hui Tian.) Yiqin Qiu and Hui Tian are with the College of Computer Science and Technology, National Huaqiao University, Xiamen 361021, China, and also with the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.ed",
+          "distance": 1.2349952459335327,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqiao University. Downloaded on July 03,2025 at 06:47:41 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.2397983074188232,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.edu.cn; htian@hqu.edu.cn). Haizhou Li is with the School of Data Science, Shenzhen Research Institute of Big Data, The Chinese University of Hong Kong, Shenzhen 518172, China, also with the Department of Electrical and Computer Engineer- ing, National University of Singapore, Singapore 119077, also with the Faculty of Mathematics/Computer Science, University of Bremen, 28359 Bremen, Germany, and also with Kriston AI, Xiamen 361024, China (e-mail: haizhouli@cuhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichun",
+          "distance": 1.2659791707992554,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "uhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichung 40724, Taiwan (e-mail: alan3c@gmail.com). Athanasios V . Vasilakos is with the Center for AI Research, University of Agder, 4879 Grimstad, Norway (e-mail: thanos.vasilakos@uia.no). Digital Object Identifier 10.1109/TIFS.2023.3269640 I. I NTRODUCTION S TEGANOGRAPHY is the art and science of concealing secret information in public carriers [1], [2], [3], [4], while steganalysis is an adversarial technique designed to reveal the existence of covert communications established via steganography. As both sides of the game, steganographers and steganalysts are constantly improvi",
+          "distance": 1.292301893234253,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganography. That is to say, to realize information hiding, even replacing a normally searched FCB parameter with another suboptimal one will not cause perceptible distortions. Therefore, the FCB parameters have become the darling of steganographers in practice. As the other side of the game, steganalysts have also made many efforts to detect FCB-based steganography. In the early days, researchers used some classical statistical properties of pulse positions, such as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEE",
+          "distance": 1.3244109153747559,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": ". In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Frequency (LSF) parame- ters [7], [8], [9], [10], [11], Adaptive Codebook (ACB) param- eters [12], [13], [14], [15], [16] and Fixed Codebook (FCB) parameters [17], [18], [19], [20], [21], [22]. Among them, FCB parameters account for the highest percentage of each encoded speech frame, thus providing the largest steganographic carrier space [23], [24], [25]. In addition, due to the use of depth-first tree search, the obtained FCB parameters may not always be optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganogra",
+          "distance": 1.3295764923095703,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "5966 IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 20, 2025 Eﬃcient Streaming V oice Steganalysis in Challenging Detection Scenarios Pengcheng Zhou , Zhengyang Fang , Zhongliang Yang , Zhili Zhou , Senior Member , IEEE, and Linna Zhou Abstract—In recent years, there has been an increasing number of information hiding techniques based on network streaming media, focusing on how to covertly and e ﬃciently embed secret information into real-time transmitted network media signals to achieve concealed communication. The misuse of these techniques can lead to signiﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for ne",
+          "distance": 1.3178274631500244,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "niﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for network voice streams face two major challenges: eﬃcient detection under low embedding rates and short duration conditions. These challenges arise because, with low embedding rates (e.g., as low as 10%) and short transmission durations (e.g., only 0.1s), detection models struggle to acquire su ﬃciently rich sample features, making e ﬀective steganalysis di ﬃcult. To address these challenges, this paper introduces a Dual-View VoIP Steganalysis Framework (DVSF). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making",
+          "distance": 1.2962592840194702,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making the steganographic features of hard- to-detect samples more pronounced and easier to learn. It then captures ﬁne-grained local features related to steganography, building on the global features of VoIP. Specially constructed VoIP segment triplets further adjust the feature distances within the model. Ultimately, this method e ﬀectively address the detec- tion di ﬃculty in VoIP. Extensive experiments demonstrate that our method signiﬁcantly improves the accuracy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art",
+          "distance": 1.3044743537902832,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "curacy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art methods and o ﬀering superior near-real-time performance. Index Terms —Voice over IP (VoIP), steganalysis, streaming voice, steganography. I. I NTRODUCTION C OVERT systems are one of the three fundamental infor- mation security systems in the ﬁeld of information security, alongside cryptographic systems and privacy systems [30]. A notable characteristic of covert systems is their strong concealment of information. By embedding secret information into various ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 20",
+          "distance": 1.2946748733520508,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "us ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 2025. Date of publication 10 June 2025; date of current version 20 June 2025. This work was supported in part by the National Natural Science Foundation of China under Grant 62302059 and Grant 62172053. The associate editor coordinating the review of this article and approving it for publication was Prof. Fernando Perez-Gonzalez. (Pengcheng Zhou and Zhengyang Fang contributed equally to this work.) (Corresponding authors: Zhongliang Yang; Linna Zhou.) Pengcheng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zh",
+          "distance": 1.23078191280365,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "eng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zhengyang Fang, Zhongliang Yang, and Linna Zhou are with the School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing 100876, China (e-mail: yangzl@bupt.edu.cn; zhoulinna@mail.tsinghua.edu.cn). Zhili Zhou is with the School of Artiﬁcial Intelligence, Guangzhou University, Guangzhou 510006, China. Digital Object Identiﬁer 10.1109/TIFS.2025.3577042 channels, they reduce the statistical distribution di ﬀerences between carriers with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverl",
+          "distance": 1.287327527999878,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverly completes the process of hiding the informa- tion, thereby avoiding suspicion and attack [31]. Typically, a covert system can be modeled as the “prisoners’ problem” [31]. In this model, the sender needs to convey a secret message from a space of secret messages to the receiver. The sender selects any normal carrier from the public channel and uses a key to embed the secret message into the normal carrier. This transforms the original normal carrier into a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subse",
+          "distance": 1.326804757118225,
+          "retrieval_rank": 11
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "development of the Internet, communication via streaming media has signiﬁcantly advanced. Network streaming media, as a real-time dynamic audio medium, contrasts with other static media carriers by having controllable transmission time and, theoretically, an inﬁnite capacity for information hiding, which makes streaming media-based information hiding more challenging to detect. V oice over Internet Protocol (V oIP) is a widely adopted form of streaming media, directly connecting to IP network communications and o ﬀering lower communication costs. Common V oIP codecs include G.723.1 and G.729, both extensively using Linear Predictive Coding (LPC) due to its ability to achieve high compressio",
+          "distance": 1.3547909259796143,
+          "retrieval_rank": 12
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "smit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution of carriers before and after steganography as much as possible. Conversely, Eve’s task is to accurately determine whether a carrier contains secret information, so she needs to identify these di ﬀerences as eﬀectively as possible. In today’s social networks, various media formats, including images [22], [23], [42], audio [1], [2], [32], and text [9], [46], [47], [52], can serve as carriers for steganography. In recent years, with the widespread adoption and development of the Internet, communication via streaming media has signiﬁcantly advanced. Network streaming media, as a",
+          "distance": 1.3205091953277588,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subsequently, upon receiving the steganographic car- rier, the receiver uses their own key to extract the secret message from it. To ensure the secrecy of the message, we typically require that the carrier remain completely identical in multidimensional features before and after steganography. However, in practice, this mapping often aﬀects the probability distribution between the two. Overall, the primary goal of the sender and receiver is to successfully transmit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution o",
+          "distance": 1.325134515762329,
+          "retrieval_rank": 10
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "What is the difference between Paper1 and Paper2?",
+          "reason": "The question asks about comparing two papers, which requires document retrieval and analysis from local papers."
+        },
+        "tool_used": "rag",
+        "tool_input": "What is the difference between Paper1 and Paper2?",
+        "fallback_used": false,
+        "context_sufficient": true,
+        "context_metrics": {
+          "multi_agent": true,
+          "question_type": "COMPARISON",
+          "sub_metrics": [
+            {
+              "sub_id": "s1",
+              "target_source": "Paper1.pdf",
+              "context_sufficient": true,
+              "error": ""
+            },
+            {
+              "sub_id": "s2",
+              "target_source": "Paper2.pdf",
+              "context_sufficient": true,
+              "error": ""
+            }
+          ],
+          "synthesizer_mode": "llm_comparison"
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "planner",
+          "answer_worker",
+          "synthesizer",
+          "generate_answer"
+        ],
+        "plan": {
+          "question_type": "COMPARISON",
+          "subtasks": [
+            {
+              "sub_id": "s1",
+              "sub_question": "What are the main contributions and findings of Paper1?",
+              "target_source": "Paper1.pdf"
+            },
+            {
+              "sub_id": "s2",
+              "sub_question": "What are the main contributions and findings of Paper2?",
+              "target_source": "Paper2.pdf"
+            }
+          ]
+        },
+        "sub_answers": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "sub_question": "What are the main contributions and findings of Paper1?",
+            "context_sufficient": true,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "Based strictly on the provided context, the main contributions and findings of Paper1 are:\n\n1.  **A novel steganalysis method (SepSteNet with DPES):** The paper presents a new method for speech steganalysis based on a separable convolution network (SepSteNet) with a dual-stream pyramid enhanced stra"
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "sub_question": "What are the main contributions and findings of Paper2?",
+            "context_sufficient": true,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "Based on the provided context, the main contribution of Paper2 is the introduction of the **Dual-View VoIP Steganalysis Framework (DVSF)**. This framework aims to address two major challenges in streaming voice steganalysis: efficient detection under **low embedding rates** (e.g., 10%) and **short t"
+          }
+        ],
+        "available_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "workflow": [
+        "choose_tool",
+        "planner",
+        "answer_worker",
+        "synthesizer",
+        "generate_answer"
+      ],
+      "plan": {
+        "question_type": "COMPARISON",
+        "subtasks": [
+          {
+            "sub_id": "s1",
+            "sub_question": "What are the main contributions and findings of Paper1?",
+            "target_source": "Paper1.pdf"
+          },
+          {
+            "sub_id": "s2",
+            "sub_question": "What are the main contributions and findings of Paper2?",
+            "target_source": "Paper2.pdf"
+          }
+        ]
+      },
+      "sub_answers": [
+        {
+          "sub_id": "s1",
+          "target_source": "Paper1.pdf",
+          "sub_question": "What are the main contributions and findings of Paper1?",
+          "context_sufficient": true,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "Based strictly on the provided context, the main contributions and findings of Paper1 are:\n\n1.  **A novel steganalysis method (SepSteNet with DPES):** The paper presents a new method for speech steganalysis based on a separable convolution network (SepSteNet) with a dual-stream pyramid enhanced stra"
+        },
+        {
+          "sub_id": "s2",
+          "target_source": "Paper2.pdf",
+          "sub_question": "What are the main contributions and findings of Paper2?",
+          "context_sufficient": true,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "Based on the provided context, the main contribution of Paper2 is the introduction of the **Dual-View VoIP Steganalysis Framework (DVSF)**. This framework aims to address two major challenges in streaming voice steganalysis: efficient detection under **low embedding rates** (e.g., 10%) and **short t"
+        }
+      ],
+      "context_sufficient": true,
+      "context_metrics": {
+        "multi_agent": true,
+        "question_type": "COMPARISON",
+        "sub_metrics": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "context_sufficient": true,
+            "error": ""
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "context_sufficient": true,
+            "error": ""
+          }
+        ],
+        "synthesizer_mode": "llm_comparison"
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 20,
+        "counts": {
+          "Paper1.pdf": 10,
+          "Paper2.pdf": 10
+        },
+        "percentages": {
+          "Paper1.pdf": 0.5,
+          "Paper2.pdf": 0.5
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf"
+        ]
+      },
+      "expected_source_coverage": true,
+      "workflow_contains_planner": true,
+      "workflow_contains_answer_worker": true,
+      "workflow_contains_synthesizer": true,
+      "workflow_contains_multi_agent": true,
+      "multi_agent_metric": true,
+      "tool_used": "rag",
+      "latency_ms": 19945.26,
+      "request_error": "",
+      "relevance_gate_rejected": false,
+      "outcome": "multi_agent_answered_with_expected_sources"
+    },
+    {
+      "id": "q009",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "better",
+        "outperform",
+        "superior",
+        "compare"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "session_id": "multi-agent-rag-20260621-q009",
+      "question": "Which method performs better, the one in Paper1 or Paper2?",
+      "answer": "针对问题：Which method performs better, the one in Paper1 or Paper2?\n\n[Source: Paper1.pdf]\nBased on the context, the method described in Paper1 significantly outperforms the existing ones. The experimental results demonstrate that the presented method outperforms the state of the arts, and the DPES is shown to be a general enhancement strategy that can effectively improve the performance of existing deep neural networks for speech steganalysis.\n\n[Source: Paper2.pdf]\n当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。\n\n注意：部分论文证据不足（Paper2.pdf），以下仅为基于现有证据的部分回答。",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.1747156381607056,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.1753841638565063,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.179989218711853,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.2436569929122925,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganography. That is to say, to realize information hiding, even replacing a normally searched FCB parameter with another suboptimal one will not cause perceptible distortions. Therefore, the FCB parameters have become the darling of steganographers in practice. As the other side of the game, steganalysts have also made many efforts to detect FCB-based steganography. In the early days, researchers used some classical statistical properties of pulse positions, such as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEE",
+          "distance": 1.235795021057129,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": ". In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Frequency (LSF) parame- ters [7], [8], [9], [10], [11], Adaptive Codebook (ACB) param- eters [12], [13], [14], [15], [16] and Fixed Codebook (FCB) parameters [17], [18], [19], [20], [21], [22]. Among them, FCB parameters account for the highest percentage of each encoded speech frame, thus providing the largest steganographic carrier space [23], [24], [25]. In addition, due to the use of depth-first tree search, the obtained FCB parameters may not always be optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganogra",
+          "distance": 1.2457863092422485,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of China under Grant 61972168 and in part by the Major Science and Technology Project of Xiamen (Industry and Information Tech- nology Area) under Grant 3502Z20231007. The associate editor coordinating the review of this manuscript and approving it for publication was Dr. Pedro Comesana. (Corresponding author: Hui Tian.) Yiqin Qiu and Hui Tian are with the College of Computer Science and Technology, National Huaqiao University, Xiamen 361021, China, and also with the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.ed",
+          "distance": 1.2542904615402222,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "uhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichung 40724, Taiwan (e-mail: alan3c@gmail.com). Athanasios V . Vasilakos is with the Center for AI Research, University of Agder, 4879 Grimstad, Norway (e-mail: thanos.vasilakos@uia.no). Digital Object Identifier 10.1109/TIFS.2023.3269640 I. I NTRODUCTION S TEGANOGRAPHY is the art and science of concealing secret information in public carriers [1], [2], [3], [4], while steganalysis is an adversarial technique designed to reveal the existence of covert communications established via steganography. As both sides of the game, steganographers and steganalysts are constantly improvi",
+          "distance": 1.2795779705047607,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "ive features. With the popularization of V oice over Internet Protocol (V oIP) applications [5], speech stream is widely favored by steganographers as an excellent steganographic carrier. So far, various speech coding algorithms have appeared in V oIP systems, among which the hybrid encoders based on analysis by synthesis have been most widely employed because they can achieve low coding bit rates while maintaining good speech quality. Thus, steganography based on hybrid speech encoders (steganography in low-bit-rate speech streams) is the mainstream of current research [6]. In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Fr",
+          "distance": 1.284159779548645,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "ations established via steganography. As both sides of the game, steganographers and steganalysts are constantly improving their skills. To enhance steganographic security (including imperceptibility and unde- tectability), steganographers try their best to minimize the difference between cover samples (referred to as cover) and steganographic samples (referred to as stego) according to cover characteristics. To avoid the abuse of steganography, steganalysts are committed to distinguishing cover and stego samples to the greatest extent by discovering effective discrim- inative features. With the popularization of V oice over Internet Protocol (V oIP) applications [5], speech stream is widely",
+          "distance": 1.3024649620056152,
+          "retrieval_rank": 11
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making the steganographic features of hard- to-detect samples more pronounced and easier to learn. It then captures ﬁne-grained local features related to steganography, building on the global features of VoIP. Specially constructed VoIP segment triplets further adjust the feature distances within the model. Ultimately, this method e ﬀectively address the detec- tion di ﬃculty in VoIP. Extensive experiments demonstrate that our method signiﬁcantly improves the accuracy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art",
+          "distance": 1.2217717170715332,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "curacy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art methods and o ﬀering superior near-real-time performance. Index Terms —Voice over IP (VoIP), steganalysis, streaming voice, steganography. I. I NTRODUCTION C OVERT systems are one of the three fundamental infor- mation security systems in the ﬁeld of information security, alongside cryptographic systems and privacy systems [30]. A notable characteristic of covert systems is their strong concealment of information. By embedding secret information into various ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 20",
+          "distance": 1.2452890872955322,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "niﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for network voice streams face two major challenges: eﬃcient detection under low embedding rates and short duration conditions. These challenges arise because, with low embedding rates (e.g., as low as 10%) and short transmission durations (e.g., only 0.1s), detection models struggle to acquire su ﬃciently rich sample features, making e ﬀective steganalysis di ﬃcult. To address these challenges, this paper introduces a Dual-View VoIP Steganalysis Framework (DVSF). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making",
+          "distance": 1.2498667240142822,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "us ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 2025. Date of publication 10 June 2025; date of current version 20 June 2025. This work was supported in part by the National Natural Science Foundation of China under Grant 62302059 and Grant 62172053. The associate editor coordinating the review of this article and approving it for publication was Prof. Fernando Perez-Gonzalez. (Pengcheng Zhou and Zhengyang Fang contributed equally to this work.) (Corresponding authors: Zhongliang Yang; Linna Zhou.) Pengcheng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zh",
+          "distance": 1.2038941383361816,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "e G.723.1 and G.729, both extensively using Linear Predictive Coding (LPC) due to its ability to achieve high compression ratios while maintaining satisfactory speech quality. During the encoding process, it is feasible to hide information within the payload (i.e., speech frames). Steganographic methods based on low bit-rate V oIP 1556-6021 © 2025 IEEE. All rights reserved, including rights for text and data mining, and training of artiﬁcial intelligence and similar technologies. Personal use is permitted, but republication /redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqi",
+          "distance": 1.2542494535446167,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverly completes the process of hiding the informa- tion, thereby avoiding suspicion and attack [31]. Typically, a covert system can be modeled as the “prisoners’ problem” [31]. In this model, the sender needs to convey a secret message from a space of secret messages to the receiver. The sender selects any normal carrier from the public channel and uses a key to embed the secret message into the normal carrier. This transforms the original normal carrier into a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subse",
+          "distance": 1.266497015953064,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subsequently, upon receiving the steganographic car- rier, the receiver uses their own key to extract the secret message from it. To ensure the secrecy of the message, we typically require that the carrier remain completely identical in multidimensional features before and after steganography. However, in practice, this mapping often aﬀects the probability distribution between the two. Overall, the primary goal of the sender and receiver is to successfully transmit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution o",
+          "distance": 1.2715206146240234,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "5966 IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 20, 2025 Eﬃcient Streaming V oice Steganalysis in Challenging Detection Scenarios Pengcheng Zhou , Zhengyang Fang , Zhongliang Yang , Zhili Zhou , Senior Member , IEEE, and Linna Zhou Abstract—In recent years, there has been an increasing number of information hiding techniques based on network streaming media, focusing on how to covertly and e ﬃciently embed secret information into real-time transmitted network media signals to achieve concealed communication. The misuse of these techniques can lead to signiﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for ne",
+          "distance": 1.272383213043213,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "smit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution of carriers before and after steganography as much as possible. Conversely, Eve’s task is to accurately determine whether a carrier contains secret information, so she needs to identify these di ﬀerences as eﬀectively as possible. In today’s social networks, various media formats, including images [22], [23], [42], audio [1], [2], [32], and text [9], [46], [47], [52], can serve as carriers for steganography. In recent years, with the widespread adoption and development of the Internet, communication via streaming media has signiﬁcantly advanced. Network streaming media, as a",
+          "distance": 1.2781131267547607,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "eng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zhengyang Fang, Zhongliang Yang, and Linna Zhou are with the School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing 100876, China (e-mail: yangzl@bupt.edu.cn; zhoulinna@mail.tsinghua.edu.cn). Zhili Zhou is with the School of Artiﬁcial Intelligence, Guangzhou University, Guangzhou 510006, China. Digital Object Identiﬁer 10.1109/TIFS.2025.3577042 channels, they reduce the statistical distribution di ﬀerences between carriers with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverl",
+          "distance": 1.2933349609375,
+          "retrieval_rank": 10
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "Which method performs better, the one in Paper1 or Paper2?",
+          "reason": "The question asks about comparison between methods in two specific local papers."
+        },
+        "tool_used": "rag",
+        "tool_input": "Which method performs better, the one in Paper1 or Paper2?",
+        "fallback_used": false,
+        "context_sufficient": false,
+        "context_metrics": {
+          "multi_agent": true,
+          "question_type": "COMPARISON",
+          "sub_metrics": [
+            {
+              "sub_id": "s1",
+              "target_source": "Paper1.pdf",
+              "context_sufficient": true,
+              "error": ""
+            },
+            {
+              "sub_id": "s2",
+              "target_source": "Paper2.pdf",
+              "context_sufficient": false,
+              "error": ""
+            }
+          ],
+          "synthesizer_mode": "deterministic_partial",
+          "partial_answer": true
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "planner",
+          "answer_worker",
+          "synthesizer",
+          "generate_answer"
+        ],
+        "plan": {
+          "question_type": "COMPARISON",
+          "subtasks": [
+            {
+              "sub_id": "s1",
+              "sub_question": "What is the performance of the method described in Paper1?",
+              "target_source": "Paper1.pdf"
+            },
+            {
+              "sub_id": "s2",
+              "sub_question": "What is the performance of the method described in Paper2?",
+              "target_source": "Paper2.pdf"
+            }
+          ]
+        },
+        "sub_answers": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "sub_question": "What is the performance of the method described in Paper1?",
+            "context_sufficient": true,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "Based on the context, the method described in Paper1 significantly outperforms the existing ones. The experimental results demonstrate that the presented method outperforms the state of the arts, and the DPES is shown to be a general enhancement strategy that can effectively improve the performance "
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "sub_question": "What is the performance of the method described in Paper2?",
+            "context_sufficient": false,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。"
+          }
+        ],
+        "available_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "workflow": [
+        "choose_tool",
+        "planner",
+        "answer_worker",
+        "synthesizer",
+        "generate_answer"
+      ],
+      "plan": {
+        "question_type": "COMPARISON",
+        "subtasks": [
+          {
+            "sub_id": "s1",
+            "sub_question": "What is the performance of the method described in Paper1?",
+            "target_source": "Paper1.pdf"
+          },
+          {
+            "sub_id": "s2",
+            "sub_question": "What is the performance of the method described in Paper2?",
+            "target_source": "Paper2.pdf"
+          }
+        ]
+      },
+      "sub_answers": [
+        {
+          "sub_id": "s1",
+          "target_source": "Paper1.pdf",
+          "sub_question": "What is the performance of the method described in Paper1?",
+          "context_sufficient": true,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "Based on the context, the method described in Paper1 significantly outperforms the existing ones. The experimental results demonstrate that the presented method outperforms the state of the arts, and the DPES is shown to be a general enhancement strategy that can effectively improve the performance "
+        },
+        {
+          "sub_id": "s2",
+          "target_source": "Paper2.pdf",
+          "sub_question": "What is the performance of the method described in Paper2?",
+          "context_sufficient": false,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。"
+        }
+      ],
+      "context_sufficient": false,
+      "context_metrics": {
+        "multi_agent": true,
+        "question_type": "COMPARISON",
+        "sub_metrics": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "context_sufficient": true,
+            "error": ""
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "context_sufficient": false,
+            "error": ""
+          }
+        ],
+        "synthesizer_mode": "deterministic_partial",
+        "partial_answer": true
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 20,
+        "counts": {
+          "Paper1.pdf": 10,
+          "Paper2.pdf": 10
+        },
+        "percentages": {
+          "Paper1.pdf": 0.5,
+          "Paper2.pdf": 0.5
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf"
+        ]
+      },
+      "expected_source_coverage": true,
+      "workflow_contains_planner": true,
+      "workflow_contains_answer_worker": true,
+      "workflow_contains_synthesizer": true,
+      "workflow_contains_multi_agent": true,
+      "multi_agent_metric": true,
+      "tool_used": "rag",
+      "latency_ms": 11396.41,
+      "request_error": "",
+      "relevance_gate_rejected": false,
+      "outcome": "multi_agent_insufficient_context"
+    },
+    {
+      "id": "q010",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "complementary",
+        "competing",
+        "similar",
+        "different"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "session_id": "multi-agent-rag-20260621-q010",
+      "question": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+      "answer": "The approaches in Paper1 and Paper2 are **complementary** rather than competing, as they target different aspects of steganalysis.\n\nPaper1 proposes a **separable convolution network (SepSteNet) with a dual-stream pyramid enhanced strategy (DPES)** that focuses on analyzing speech signals by capturing pulse correspondence, enhancing salient features, and using dual-stream branches with original and calibration samples to eliminate content impact [Source: Paper1.pdf]. Paper2 proposes a **Dual-View VoIP Steganalysis Framework (DVSF)** that focuses on network voice streams by obfuscating steganographic descriptors, capturing fine-grained local features, and using VoIP segment triplets to adjust feature distances [Source: Paper2.pdf].\n\nThe key difference is that Paper1 works on **speech signal features** (pulse positions, subframes), while Paper2 works on **network stream descriptors** (VoIP segments, embedding rates). They could be combined: Paper1’s DPES strategy could enhance Paper2’s feature extraction, or Paper2’s triplet-based distance adjustment could improve Paper1’s detection under low embedding rates. Neither paper claims to replace the other’s domain.",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.1580411195755005,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.1938350200653076,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.1965688467025757,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.2188702821731567,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of China under Grant 61972168 and in part by the Major Science and Technology Project of Xiamen (Industry and Information Tech- nology Area) under Grant 3502Z20231007. The associate editor coordinating the review of this manuscript and approving it for publication was Dr. Pedro Comesana. (Corresponding author: Hui Tian.) Yiqin Qiu and Hui Tian are with the College of Computer Science and Technology, National Huaqiao University, Xiamen 361021, China, and also with the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.ed",
+          "distance": 1.2222185134887695,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqiao University. Downloaded on July 03,2025 at 06:47:41 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.2315360307693481,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "uhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichung 40724, Taiwan (e-mail: alan3c@gmail.com). Athanasios V . Vasilakos is with the Center for AI Research, University of Agder, 4879 Grimstad, Norway (e-mail: thanos.vasilakos@uia.no). Digital Object Identifier 10.1109/TIFS.2023.3269640 I. I NTRODUCTION S TEGANOGRAPHY is the art and science of concealing secret information in public carriers [1], [2], [3], [4], while steganalysis is an adversarial technique designed to reveal the existence of covert communications established via steganography. As both sides of the game, steganographers and steganalysts are constantly improvi",
+          "distance": 1.2363380193710327,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganography. That is to say, to realize information hiding, even replacing a normally searched FCB parameter with another suboptimal one will not cause perceptible distortions. Therefore, the FCB parameters have become the darling of steganographers in practice. As the other side of the game, steganalysts have also made many efforts to detect FCB-based steganography. In the early days, researchers used some classical statistical properties of pulse positions, such as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEE",
+          "distance": 1.2466635704040527,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": ". In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Frequency (LSF) parame- ters [7], [8], [9], [10], [11], Adaptive Codebook (ACB) param- eters [12], [13], [14], [15], [16] and Fixed Codebook (FCB) parameters [17], [18], [19], [20], [21], [22]. Among them, FCB parameters account for the highest percentage of each encoded speech frame, thus providing the largest steganographic carrier space [23], [24], [25]. In addition, due to the use of depth-first tree search, the obtained FCB parameters may not always be optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganogra",
+          "distance": 1.256453037261963,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.edu.cn; htian@hqu.edu.cn). Haizhou Li is with the School of Data Science, Shenzhen Research Institute of Big Data, The Chinese University of Hong Kong, Shenzhen 518172, China, also with the Department of Electrical and Computer Engineer- ing, National University of Singapore, Singapore 119077, also with the Faculty of Mathematics/Computer Science, University of Bremen, 28359 Bremen, Germany, and also with Kriston AI, Xiamen 361024, China (e-mail: haizhouli@cuhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichun",
+          "distance": 1.2595645189285278,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "niﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for network voice streams face two major challenges: eﬃcient detection under low embedding rates and short duration conditions. These challenges arise because, with low embedding rates (e.g., as low as 10%) and short transmission durations (e.g., only 0.1s), detection models struggle to acquire su ﬃciently rich sample features, making e ﬀective steganalysis di ﬃcult. To address these challenges, this paper introduces a Dual-View VoIP Steganalysis Framework (DVSF). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making",
+          "distance": 1.221243977546692,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making the steganographic features of hard- to-detect samples more pronounced and easier to learn. It then captures ﬁne-grained local features related to steganography, building on the global features of VoIP. Specially constructed VoIP segment triplets further adjust the feature distances within the model. Ultimately, this method e ﬀectively address the detec- tion di ﬃculty in VoIP. Extensive experiments demonstrate that our method signiﬁcantly improves the accuracy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art",
+          "distance": 1.2021390199661255,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "5966 IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 20, 2025 Eﬃcient Streaming V oice Steganalysis in Challenging Detection Scenarios Pengcheng Zhou , Zhengyang Fang , Zhongliang Yang , Zhili Zhou , Senior Member , IEEE, and Linna Zhou Abstract—In recent years, there has been an increasing number of information hiding techniques based on network streaming media, focusing on how to covertly and e ﬃciently embed secret information into real-time transmitted network media signals to achieve concealed communication. The misuse of these techniques can lead to signiﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for ne",
+          "distance": 1.2569215297698975,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "curacy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art methods and o ﬀering superior near-real-time performance. Index Terms —Voice over IP (VoIP), steganalysis, streaming voice, steganography. I. I NTRODUCTION C OVERT systems are one of the three fundamental infor- mation security systems in the ﬁeld of information security, alongside cryptographic systems and privacy systems [30]. A notable characteristic of covert systems is their strong concealment of information. By embedding secret information into various ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 20",
+          "distance": 1.237898826599121,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "us ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 2025. Date of publication 10 June 2025; date of current version 20 June 2025. This work was supported in part by the National Natural Science Foundation of China under Grant 62302059 and Grant 62172053. The associate editor coordinating the review of this article and approving it for publication was Prof. Fernando Perez-Gonzalez. (Pengcheng Zhou and Zhengyang Fang contributed equally to this work.) (Corresponding authors: Zhongliang Yang; Linna Zhou.) Pengcheng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zh",
+          "distance": 1.2090303897857666,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverly completes the process of hiding the informa- tion, thereby avoiding suspicion and attack [31]. Typically, a covert system can be modeled as the “prisoners’ problem” [31]. In this model, the sender needs to convey a secret message from a space of secret messages to the receiver. The sender selects any normal carrier from the public channel and uses a key to embed the secret message into the normal carrier. This transforms the original normal carrier into a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subse",
+          "distance": 1.2119429111480713,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "e G.723.1 and G.729, both extensively using Linear Predictive Coding (LPC) due to its ability to achieve high compression ratios while maintaining satisfactory speech quality. During the encoding process, it is feasible to hide information within the payload (i.e., speech frames). Steganographic methods based on low bit-rate V oIP 1556-6021 © 2025 IEEE. All rights reserved, including rights for text and data mining, and training of artiﬁcial intelligence and similar technologies. Personal use is permitted, but republication /redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqi",
+          "distance": 1.241307020187378,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "smit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution of carriers before and after steganography as much as possible. Conversely, Eve’s task is to accurately determine whether a carrier contains secret information, so she needs to identify these di ﬀerences as eﬀectively as possible. In today’s social networks, various media formats, including images [22], [23], [42], audio [1], [2], [32], and text [9], [46], [47], [52], can serve as carriers for steganography. In recent years, with the widespread adoption and development of the Internet, communication via streaming media has signiﬁcantly advanced. Network streaming media, as a",
+          "distance": 1.2527152299880981,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subsequently, upon receiving the steganographic car- rier, the receiver uses their own key to extract the secret message from it. To ensure the secrecy of the message, we typically require that the carrier remain completely identical in multidimensional features before and after steganography. However, in practice, this mapping often aﬀects the probability distribution between the two. Overall, the primary goal of the sender and receiver is to successfully transmit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution o",
+          "distance": 1.2554136514663696,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "eng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zhengyang Fang, Zhongliang Yang, and Linna Zhou are with the School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing 100876, China (e-mail: yangzl@bupt.edu.cn; zhoulinna@mail.tsinghua.edu.cn). Zhili Zhou is with the School of Artiﬁcial Intelligence, Guangzhou University, Guangzhou 510006, China. Digital Object Identiﬁer 10.1109/TIFS.2025.3577042 channels, they reduce the statistical distribution di ﬀerences between carriers with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverl",
+          "distance": 1.259827733039856,
+          "retrieval_rank": 10
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+          "reason": "The question asks about comparing the approaches in two specific local papers/documents, which requires retrieval from the loaded papers."
+        },
+        "tool_used": "rag",
+        "tool_input": "Are the approaches in Paper1 and Paper2 complementary or competing?",
+        "fallback_used": false,
+        "context_sufficient": true,
+        "context_metrics": {
+          "multi_agent": true,
+          "question_type": "COMPARISON",
+          "sub_metrics": [
+            {
+              "sub_id": "s1",
+              "target_source": "Paper1.pdf",
+              "context_sufficient": true,
+              "error": ""
+            },
+            {
+              "sub_id": "s2",
+              "target_source": "Paper2.pdf",
+              "context_sufficient": true,
+              "error": ""
+            }
+          ],
+          "synthesizer_mode": "llm_comparison"
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "planner",
+          "answer_worker",
+          "synthesizer",
+          "generate_answer"
+        ],
+        "plan": {
+          "question_type": "COMPARISON",
+          "subtasks": [
+            {
+              "sub_id": "s1",
+              "sub_question": "What is the approach proposed in Paper1?",
+              "target_source": "Paper1.pdf"
+            },
+            {
+              "sub_id": "s2",
+              "sub_question": "What is the approach proposed in Paper2?",
+              "target_source": "Paper2.pdf"
+            }
+          ]
+        },
+        "sub_answers": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "sub_question": "What is the approach proposed in Paper1?",
+            "context_sufficient": true,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "Based on the context, the paper proposes a novel steganalysis method based on a **separable convolution network (SepSteNet) with a dual-stream pyramid enhanced strategy (DPES)**. Specifically, the approach includes:\n\n1.  **Pulse-aware separable block**: Designed to capture pulse correspondence along"
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "sub_question": "What is the approach proposed in Paper2?",
+            "context_sufficient": true,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "Based on the provided text from Paper2, the proposed approach is a **Dual-View VoIP Steganalysis Framework (DVSF)**. It addresses challenges in detecting steganography in network voice streams, particularly under low embedding rates and short durations. The framework operates by: 1) randomly obfusca"
+          }
+        ],
+        "available_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "workflow": [
+        "choose_tool",
+        "planner",
+        "answer_worker",
+        "synthesizer",
+        "generate_answer"
+      ],
+      "plan": {
+        "question_type": "COMPARISON",
+        "subtasks": [
+          {
+            "sub_id": "s1",
+            "sub_question": "What is the approach proposed in Paper1?",
+            "target_source": "Paper1.pdf"
+          },
+          {
+            "sub_id": "s2",
+            "sub_question": "What is the approach proposed in Paper2?",
+            "target_source": "Paper2.pdf"
+          }
+        ]
+      },
+      "sub_answers": [
+        {
+          "sub_id": "s1",
+          "target_source": "Paper1.pdf",
+          "sub_question": "What is the approach proposed in Paper1?",
+          "context_sufficient": true,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "Based on the context, the paper proposes a novel steganalysis method based on a **separable convolution network (SepSteNet) with a dual-stream pyramid enhanced strategy (DPES)**. Specifically, the approach includes:\n\n1.  **Pulse-aware separable block**: Designed to capture pulse correspondence along"
+        },
+        {
+          "sub_id": "s2",
+          "target_source": "Paper2.pdf",
+          "sub_question": "What is the approach proposed in Paper2?",
+          "context_sufficient": true,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "Based on the provided text from Paper2, the proposed approach is a **Dual-View VoIP Steganalysis Framework (DVSF)**. It addresses challenges in detecting steganography in network voice streams, particularly under low embedding rates and short durations. The framework operates by: 1) randomly obfusca"
+        }
+      ],
+      "context_sufficient": true,
+      "context_metrics": {
+        "multi_agent": true,
+        "question_type": "COMPARISON",
+        "sub_metrics": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "context_sufficient": true,
+            "error": ""
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "context_sufficient": true,
+            "error": ""
+          }
+        ],
+        "synthesizer_mode": "llm_comparison"
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 20,
+        "counts": {
+          "Paper1.pdf": 10,
+          "Paper2.pdf": 10
+        },
+        "percentages": {
+          "Paper1.pdf": 0.5,
+          "Paper2.pdf": 0.5
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf"
+        ]
+      },
+      "expected_source_coverage": true,
+      "workflow_contains_planner": true,
+      "workflow_contains_answer_worker": true,
+      "workflow_contains_synthesizer": true,
+      "workflow_contains_multi_agent": true,
+      "multi_agent_metric": true,
+      "tool_used": "rag",
+      "latency_ms": 20530.56,
+      "request_error": "",
+      "relevance_gate_rejected": false,
+      "outcome": "multi_agent_answered_with_expected_sources"
+    },
+    {
+      "id": "q019",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "assume",
+        "assumption",
+        "common",
+        "share",
+        "both"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "session_id": "multi-agent-rag-20260621-q019",
+      "question": "What are the shared assumptions between Paper1 and Paper2?",
+      "answer": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.2724196910858154,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.2638578414916992,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.3093332052230835,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.3103163242340088,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqiao University. Downloaded on July 03,2025 at 06:47:41 UTC from IEEE Xplore. Restrictions apply.",
+          "distance": 1.206360101699829,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganography. That is to say, to realize information hiding, even replacing a normally searched FCB parameter with another suboptimal one will not cause perceptible distortions. Therefore, the FCB parameters have become the darling of steganographers in practice. As the other side of the game, steganalysts have also made many efforts to detect FCB-based steganography. In the early days, researchers used some classical statistical properties of pulse positions, such as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEE",
+          "distance": 1.3104612827301025,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": ". In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Frequency (LSF) parame- ters [7], [8], [9], [10], [11], Adaptive Codebook (ACB) param- eters [12], [13], [14], [15], [16] and Fixed Codebook (FCB) parameters [17], [18], [19], [20], [21], [22]. Among them, FCB parameters account for the highest percentage of each encoded speech frame, thus providing the largest steganographic carrier space [23], [24], [25]. In addition, due to the use of depth-first tree search, the obtained FCB parameters may not always be optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganogra",
+          "distance": 1.289144515991211,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "ations established via steganography. As both sides of the game, steganographers and steganalysts are constantly improving their skills. To enhance steganographic security (including imperceptibility and unde- tectability), steganographers try their best to minimize the difference between cover samples (referred to as cover) and steganographic samples (referred to as stego) according to cover characteristics. To avoid the abuse of steganography, steganalysts are committed to distinguishing cover and stego samples to the greatest extent by discovering effective discrim- inative features. With the popularization of V oice over Internet Protocol (V oIP) applications [5], speech stream is widely",
+          "distance": 1.3263013362884521,
+          "retrieval_rank": 11
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "ive features. With the popularization of V oice over Internet Protocol (V oIP) applications [5], speech stream is widely favored by steganographers as an excellent steganographic carrier. So far, various speech coding algorithms have appeared in V oIP systems, among which the hybrid encoders based on analysis by synthesis have been most widely employed because they can achieve low coding bit rates while maintaining good speech quality. Thus, steganography based on hybrid speech encoders (steganography in low-bit-rate speech streams) is the mainstream of current research [6]. In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Fr",
+          "distance": 1.3351160287857056,
+          "retrieval_rank": 12
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "uhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichung 40724, Taiwan (e-mail: alan3c@gmail.com). Athanasios V . Vasilakos is with the Center for AI Research, University of Agder, 4879 Grimstad, Norway (e-mail: thanos.vasilakos@uia.no). Digital Object Identifier 10.1109/TIFS.2023.3269640 I. I NTRODUCTION S TEGANOGRAPHY is the art and science of concealing secret information in public carriers [1], [2], [3], [4], while steganalysis is an adversarial technique designed to reveal the existence of covert communications established via steganography. As both sides of the game, steganographers and steganalysts are constantly improvi",
+          "distance": 1.282618522644043,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverly completes the process of hiding the informa- tion, thereby avoiding suspicion and attack [31]. Typically, a covert system can be modeled as the “prisoners’ problem” [31]. In this model, the sender needs to convey a secret message from a space of secret messages to the receiver. The sender selects any normal carrier from the public channel and uses a key to embed the secret message into the normal carrier. This transforms the original normal carrier into a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subse",
+          "distance": 1.2512582540512085,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subsequently, upon receiving the steganographic car- rier, the receiver uses their own key to extract the secret message from it. To ensure the secrecy of the message, we typically require that the carrier remain completely identical in multidimensional features before and after steganography. However, in practice, this mapping often aﬀects the probability distribution between the two. Overall, the primary goal of the sender and receiver is to successfully transmit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution o",
+          "distance": 1.2865982055664062,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "smit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution of carriers before and after steganography as much as possible. Conversely, Eve’s task is to accurately determine whether a carrier contains secret information, so she needs to identify these di ﬀerences as eﬀectively as possible. In today’s social networks, various media formats, including images [22], [23], [42], audio [1], [2], [32], and text [9], [46], [47], [52], can serve as carriers for steganography. In recent years, with the widespread adoption and development of the Internet, communication via streaming media has signiﬁcantly advanced. Network streaming media, as a",
+          "distance": 1.2812761068344116,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "curacy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art methods and o ﬀering superior near-real-time performance. Index Terms —Voice over IP (VoIP), steganalysis, streaming voice, steganography. I. I NTRODUCTION C OVERT systems are one of the three fundamental infor- mation security systems in the ﬁeld of information security, alongside cryptographic systems and privacy systems [30]. A notable characteristic of covert systems is their strong concealment of information. By embedding secret information into various ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 20",
+          "distance": 1.286005973815918,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "us ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 2025. Date of publication 10 June 2025; date of current version 20 June 2025. This work was supported in part by the National Natural Science Foundation of China under Grant 62302059 and Grant 62172053. The associate editor coordinating the review of this article and approving it for publication was Prof. Fernando Perez-Gonzalez. (Pengcheng Zhou and Zhengyang Fang contributed equally to this work.) (Corresponding authors: Zhongliang Yang; Linna Zhou.) Pengcheng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zh",
+          "distance": 1.2004133462905884,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "eng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zhengyang Fang, Zhongliang Yang, and Linna Zhou are with the School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing 100876, China (e-mail: yangzl@bupt.edu.cn; zhoulinna@mail.tsinghua.edu.cn). Zhili Zhou is with the School of Artiﬁcial Intelligence, Guangzhou University, Guangzhou 510006, China. Digital Object Identiﬁer 10.1109/TIFS.2025.3577042 channels, they reduce the statistical distribution di ﬀerences between carriers with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverl",
+          "distance": 1.2728731632232666,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "e G.723.1 and G.729, both extensively using Linear Predictive Coding (LPC) due to its ability to achieve high compression ratios while maintaining satisfactory speech quality. During the encoding process, it is feasible to hide information within the payload (i.e., speech frames). Steganographic methods based on low bit-rate V oIP 1556-6021 © 2025 IEEE. All rights reserved, including rights for text and data mining, and training of artiﬁcial intelligence and similar technologies. Personal use is permitted, but republication /redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqi",
+          "distance": 1.2812962532043457,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "niﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for network voice streams face two major challenges: eﬃcient detection under low embedding rates and short duration conditions. These challenges arise because, with low embedding rates (e.g., as low as 10%) and short transmission durations (e.g., only 0.1s), detection models struggle to acquire su ﬃciently rich sample features, making e ﬀective steganalysis di ﬃcult. To address these challenges, this paper introduces a Dual-View VoIP Steganalysis Framework (DVSF). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making",
+          "distance": 1.2884057760238647,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making the steganographic features of hard- to-detect samples more pronounced and easier to learn. It then captures ﬁne-grained local features related to steganography, building on the global features of VoIP. Specially constructed VoIP segment triplets further adjust the feature distances within the model. Ultimately, this method e ﬀectively address the detec- tion di ﬃculty in VoIP. Extensive experiments demonstrate that our method signiﬁcantly improves the accuracy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art",
+          "distance": 1.2947826385498047,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "5966 IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 20, 2025 Eﬃcient Streaming V oice Steganalysis in Challenging Detection Scenarios Pengcheng Zhou , Zhengyang Fang , Zhongliang Yang , Zhili Zhou , Senior Member , IEEE, and Linna Zhou Abstract—In recent years, there has been an increasing number of information hiding techniques based on network streaming media, focusing on how to covertly and e ﬃciently embed secret information into real-time transmitted network media signals to achieve concealed communication. The misuse of these techniques can lead to signiﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for ne",
+          "distance": 1.3145633935928345,
+          "retrieval_rank": 11
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "What are the shared assumptions between Paper1 and Paper2?",
+          "reason": "The question asks about comparison of assumptions between two specific papers, which requires retrieval from the loaded local documents."
+        },
+        "tool_used": "rag",
+        "tool_input": "What are the shared assumptions between Paper1 and Paper2?",
+        "fallback_used": false,
+        "context_sufficient": false,
+        "context_metrics": {
+          "multi_agent": true,
+          "question_type": "COMPARISON",
+          "sub_metrics": [
+            {
+              "sub_id": "s1",
+              "target_source": "Paper1.pdf",
+              "context_sufficient": false,
+              "error": ""
+            },
+            {
+              "sub_id": "s2",
+              "target_source": "Paper2.pdf",
+              "context_sufficient": false,
+              "error": ""
+            }
+          ],
+          "synthesizer_mode": "insufficient_evidence"
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "planner",
+          "answer_worker",
+          "synthesizer",
+          "generate_answer"
+        ],
+        "plan": {
+          "question_type": "COMPARISON",
+          "subtasks": [
+            {
+              "sub_id": "s1",
+              "sub_question": "What assumptions are presented in Paper1?",
+              "target_source": "Paper1.pdf"
+            },
+            {
+              "sub_id": "s2",
+              "sub_question": "What assumptions are presented in Paper2?",
+              "target_source": "Paper2.pdf"
+            }
+          ]
+        },
+        "sub_answers": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "sub_question": "What assumptions are presented in Paper1?",
+            "context_sufficient": false,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。"
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "sub_question": "What assumptions are presented in Paper2?",
+            "context_sufficient": false,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。"
+          }
+        ],
+        "available_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "workflow": [
+        "choose_tool",
+        "planner",
+        "answer_worker",
+        "synthesizer",
+        "generate_answer"
+      ],
+      "plan": {
+        "question_type": "COMPARISON",
+        "subtasks": [
+          {
+            "sub_id": "s1",
+            "sub_question": "What assumptions are presented in Paper1?",
+            "target_source": "Paper1.pdf"
+          },
+          {
+            "sub_id": "s2",
+            "sub_question": "What assumptions are presented in Paper2?",
+            "target_source": "Paper2.pdf"
+          }
+        ]
+      },
+      "sub_answers": [
+        {
+          "sub_id": "s1",
+          "target_source": "Paper1.pdf",
+          "sub_question": "What assumptions are presented in Paper1?",
+          "context_sufficient": false,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。"
+        },
+        {
+          "sub_id": "s2",
+          "target_source": "Paper2.pdf",
+          "sub_question": "What assumptions are presented in Paper2?",
+          "context_sufficient": false,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "当前检索到的论文片段不足以直接支持这个问题的可靠回答。系统不会基于不相关或证据不足的片段强行推断。建议换一种更具体的问题，或补充包含相关内容的论文。"
+        }
+      ],
+      "context_sufficient": false,
+      "context_metrics": {
+        "multi_agent": true,
+        "question_type": "COMPARISON",
+        "sub_metrics": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "context_sufficient": false,
+            "error": ""
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "context_sufficient": false,
+            "error": ""
+          }
+        ],
+        "synthesizer_mode": "insufficient_evidence"
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 20,
+        "counts": {
+          "Paper1.pdf": 10,
+          "Paper2.pdf": 10
+        },
+        "percentages": {
+          "Paper1.pdf": 0.5,
+          "Paper2.pdf": 0.5
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf"
+        ]
+      },
+      "expected_source_coverage": true,
+      "workflow_contains_planner": true,
+      "workflow_contains_answer_worker": true,
+      "workflow_contains_synthesizer": true,
+      "workflow_contains_multi_agent": true,
+      "multi_agent_metric": true,
+      "tool_used": "rag",
+      "latency_ms": 10174.1,
+      "request_error": "",
+      "relevance_gate_rejected": false,
+      "outcome": "multi_agent_insufficient_context"
+    },
+    {
+      "id": "q020",
+      "type": "COMPARISON",
+      "expected_keywords": [
+        "same",
+        "problem",
+        "research",
+        "address",
+        "focus"
+      ],
+      "expected_source": "Paper1.pdf / Paper2.pdf",
+      "expected_sources": [
+        "Paper1.pdf",
+        "Paper2.pdf"
+      ],
+      "session_id": "multi-agent-rag-20260621-q020",
+      "question": "Do Paper1 and Paper2 address the same research problem?",
+      "answer": "No, Paper1 and Paper2 do not address the same research problem. Paper1 focuses on **steganalysis for speech steganography based on fixed codebook (FCB) parameters** in low-bit-rate speech streams [Source: Paper1.pdf]. In contrast, Paper2 addresses the difficulty of **efficient steganalysis for network voice streams under challenging detection scenarios**, specifically low embedding rates and short transmission durations, proposing a Dual-View VoIP Steganalysis Framework (DVSF) [Source: Paper2.pdf]. While both papers deal with steganalysis in voice streams, Paper1 targets a specific steganographic carrier (FCB parameters), whereas Paper2 targets general detection difficulties under constrained conditions.",
+      "chunks": [
+        {
+          "source": "Paper1.pdf",
+          "text": "IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 18, 2023 2737 Separable Convolution Network With Dual-Stream Pyramid Enhanced Strategy for Speech Steganalysis Yiqin Qiu , Hui Tian , Senior Member, IEEE, Haizhou Li , Fellow, IEEE, Chin-Chen Chang , Fellow, IEEE, and Athanasios V . Vasilakos , Senior Member, IEEE Abstract— Steganography based on fixed codebook has become one of the most important branches of speech steganography due to its high imperceptibility and having the largest available carrier space. As its countermeasure technique, this paper presents a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strat",
+          "distance": 1.2789288759231567,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "a novel steganalysis method based on separable convo- lution network (SepSteNet) with dual-stream pyramid enhanced strategy (DPES). Specifically, to better acquire discriminative representations, we design the pulse-aware separable block to capture the pulse correspondence along independent levels of pulse positions, where the pulse-aware excitation module is plugged to avoid noisy clue accumulation by adaptively emphasizing the salient part. Moreover, the global attending block is introduced to enhance correspondence features through calculating global responses at distinct subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-dom",
+          "distance": 1.243050456047058,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "t subframes. In addition, to eliminate the negative impact of sample content, DPES is leveraged to incorporate cross-domain coherence features by the inverted connected dual-stream branches. With the original and calibration speech samples, two branches enable the cor- respondence of two detection feature domains to interact with each other to generate coherence features independent of sample content, thereby improving the detection performance. The per- formance of the presented method is comprehensively evaluated and compared with the state of the arts. The experimental results demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to",
+          "distance": 1.2380671501159668,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "esults demonstrate that the presented method significantly outperforms the existing ones. Furthermore, DPES is shown to be a general enhancement strategy that can effectively improve the performance of the existing deep neural network for speech steganalysis. The source code for this work is publicly available on https://github.com/BarryxxZ/SepSteNetwithDPES. Index Terms— Steganalysis, separable convolution, pulse posi- tion, dual-stream network, calibration. Manuscript received 9 November 2022; revised 7 March 2023; accepted 17 April 2023. Date of publication 24 April 2023; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of Chin",
+          "distance": 1.2567954063415527,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "; date of current version 3 May 2023. This work was supported in part by the National Natural Science Foundation of China under Grant 61972168 and in part by the Major Science and Technology Project of Xiamen (Industry and Information Tech- nology Area) under Grant 3502Z20231007. The associate editor coordinating the review of this manuscript and approving it for publication was Dr. Pedro Comesana. (Corresponding author: Hui Tian.) Yiqin Qiu and Hui Tian are with the College of Computer Science and Technology, National Huaqiao University, Xiamen 361021, China, and also with the Xiamen Key Laboratory of Data Security and Blockchain Technology, Xiamen 361021, China (e-mail: barryxxz@stu.hqu.ed",
+          "distance": 1.2331622838974,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "uhk.edu.cn). Chin-Chen Chang is with the Department of Information and Com- puter Science, Feng Chia University, Taichung 40724, Taiwan (e-mail: alan3c@gmail.com). Athanasios V . Vasilakos is with the Center for AI Research, University of Agder, 4879 Grimstad, Norway (e-mail: thanos.vasilakos@uia.no). Digital Object Identifier 10.1109/TIFS.2023.3269640 I. I NTRODUCTION S TEGANOGRAPHY is the art and science of concealing secret information in public carriers [1], [2], [3], [4], while steganalysis is an adversarial technique designed to reveal the existence of covert communications established via steganography. As both sides of the game, steganographers and steganalysts are constantly improvi",
+          "distance": 1.2539989948272705,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganography. That is to say, to realize information hiding, even replacing a normally searched FCB parameter with another suboptimal one will not cause perceptible distortions. Therefore, the FCB parameters have become the darling of steganographers in practice. As the other side of the game, steganalysts have also made many efforts to detect FCB-based steganography. In the early days, researchers used some classical statistical properties of pulse positions, such as histogram flatness [26], transition probabilities [27] and entropy [27], as detection features. 1556-6021 © 2023 IEE",
+          "distance": 1.2871111631393433,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": ". In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Frequency (LSF) parame- ters [7], [8], [9], [10], [11], Adaptive Codebook (ACB) param- eters [12], [13], [14], [15], [16] and Fixed Codebook (FCB) parameters [17], [18], [19], [20], [21], [22]. Among them, FCB parameters account for the highest percentage of each encoded speech frame, thus providing the largest steganographic carrier space [23], [24], [25]. In addition, due to the use of depth-first tree search, the obtained FCB parameters may not always be optimal, or even suboptimal in most cases, thus providing good conditions for achieving high imperceptibility steganogra",
+          "distance": 1.2955074310302734,
+          "retrieval_rank": 10
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "ations established via steganography. As both sides of the game, steganographers and steganalysts are constantly improving their skills. To enhance steganographic security (including imperceptibility and unde- tectability), steganographers try their best to minimize the difference between cover samples (referred to as cover) and steganographic samples (referred to as stego) according to cover characteristics. To avoid the abuse of steganography, steganalysts are committed to distinguishing cover and stego samples to the greatest extent by discovering effective discrim- inative features. With the popularization of V oice over Internet Protocol (V oIP) applications [5], speech stream is widely",
+          "distance": 1.2990881204605103,
+          "retrieval_rank": 11
+        },
+        {
+          "source": "Paper1.pdf",
+          "text": "ive features. With the popularization of V oice over Internet Protocol (V oIP) applications [5], speech stream is widely favored by steganographers as an excellent steganographic carrier. So far, various speech coding algorithms have appeared in V oIP systems, among which the hybrid encoders based on analysis by synthesis have been most widely employed because they can achieve low coding bit rates while maintaining good speech quality. Thus, steganography based on hybrid speech encoders (steganography in low-bit-rate speech streams) is the mainstream of current research [6]. In the low bit-rate speech stream, there are three parameter domains suitable for concealment, namely Line Spectral Fr",
+          "distance": 1.3064135313034058,
+          "retrieval_rank": 12
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "niﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for network voice streams face two major challenges: eﬃcient detection under low embedding rates and short duration conditions. These challenges arise because, with low embedding rates (e.g., as low as 10%) and short transmission durations (e.g., only 0.1s), detection models struggle to acquire su ﬃciently rich sample features, making e ﬀective steganalysis di ﬃcult. To address these challenges, this paper introduces a Dual-View VoIP Steganalysis Framework (DVSF). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making",
+          "distance": 1.2354159355163574,
+          "retrieval_rank": 2
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "). The framework ﬁrst randomly obfuscates parts of the native steganographic descriptors in VoIP stream segments, making the steganographic features of hard- to-detect samples more pronounced and easier to learn. It then captures ﬁne-grained local features related to steganography, building on the global features of VoIP. Specially constructed VoIP segment triplets further adjust the feature distances within the model. Ultimately, this method e ﬀectively address the detec- tion di ﬃculty in VoIP. Extensive experiments demonstrate that our method signiﬁcantly improves the accuracy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art",
+          "distance": 1.2478115558624268,
+          "retrieval_rank": 3
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "5966 IEEE TRANSACTIONS ON INFORMATION FORENSICS AND SECURITY , VOL. 20, 2025 Eﬃcient Streaming V oice Steganalysis in Challenging Detection Scenarios Pengcheng Zhou , Zhengyang Fang , Zhongliang Yang , Zhili Zhou , Senior Member , IEEE, and Linna Zhou Abstract—In recent years, there has been an increasing number of information hiding techniques based on network streaming media, focusing on how to covertly and e ﬃciently embed secret information into real-time transmitted network media signals to achieve concealed communication. The misuse of these techniques can lead to signiﬁcant security risks, such as the spread of malicious code, commands, and viruses. Current steganalysis methods for ne",
+          "distance": 1.276301622390747,
+          "retrieval_rank": 6
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "curacy of streaming voice steganalysis in these challenging detection scenarios, sur- passing existing state-of-the-art methods and o ﬀering superior near-real-time performance. Index Terms —Voice over IP (VoIP), steganalysis, streaming voice, steganography. I. I NTRODUCTION C OVERT systems are one of the three fundamental infor- mation security systems in the ﬁeld of information security, alongside cryptographic systems and privacy systems [30]. A notable characteristic of covert systems is their strong concealment of information. By embedding secret information into various ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 20",
+          "distance": 1.2565280199050903,
+          "retrieval_rank": 5
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "us ordinary carriers and transmitting it over public Received 8 November 2024; revised 12 April 2025; accepted 26 May 2025. Date of publication 10 June 2025; date of current version 20 June 2025. This work was supported in part by the National Natural Science Foundation of China under Grant 62302059 and Grant 62172053. The associate editor coordinating the review of this article and approving it for publication was Prof. Fernando Perez-Gonzalez. (Pengcheng Zhou and Zhengyang Fang contributed equally to this work.) (Corresponding authors: Zhongliang Yang; Linna Zhou.) Pengcheng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zh",
+          "distance": 1.2291784286499023,
+          "retrieval_rank": 1
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverly completes the process of hiding the informa- tion, thereby avoiding suspicion and attack [31]. Typically, a covert system can be modeled as the “prisoners’ problem” [31]. In this model, the sender needs to convey a secret message from a space of secret messages to the receiver. The sender selects any normal carrier from the public channel and uses a key to embed the secret message into the normal carrier. This transforms the original normal carrier into a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subse",
+          "distance": 1.2548038959503174,
+          "retrieval_rank": 4
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "smit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution of carriers before and after steganography as much as possible. Conversely, Eve’s task is to accurately determine whether a carrier contains secret information, so she needs to identify these di ﬀerences as eﬀectively as possible. In today’s social networks, various media formats, including images [22], [23], [42], audio [1], [2], [32], and text [9], [46], [47], [52], can serve as carriers for steganography. In recent years, with the widespread adoption and development of the Internet, communication via streaming media has signiﬁcantly advanced. Network streaming media, as a",
+          "distance": 1.276595115661621,
+          "retrieval_rank": 7
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "a steganographic carrier, and a large number of these steganographic carriers constitute the steganographic space. Subsequently, upon receiving the steganographic car- rier, the receiver uses their own key to extract the secret message from it. To ensure the secrecy of the message, we typically require that the carrier remain completely identical in multidimensional features before and after steganography. However, in practice, this mapping often aﬀects the probability distribution between the two. Overall, the primary goal of the sender and receiver is to successfully transmit information without arousing Eve’s suspicion, so they need to minimize diﬀerences in the statistical distribution o",
+          "distance": 1.282206654548645,
+          "retrieval_rank": 8
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "eng Zhou is with the International School, Beijing University of Posts and Telecommunications, Beijing 100876, China. Zhengyang Fang, Zhongliang Yang, and Linna Zhou are with the School of Cyberspace Security, Beijing University of Posts and Telecommunications, Beijing 100876, China (e-mail: yangzl@bupt.edu.cn; zhoulinna@mail.tsinghua.edu.cn). Zhili Zhou is with the School of Artiﬁcial Intelligence, Guangzhou University, Guangzhou 510006, China. Digital Object Identiﬁer 10.1109/TIFS.2025.3577042 channels, they reduce the statistical distribution di ﬀerences between carriers with embedded information and normal ones, thereby disguising the obvious communication activities. This method cleverl",
+          "distance": 1.2843657732009888,
+          "retrieval_rank": 9
+        },
+        {
+          "source": "Paper2.pdf",
+          "text": "e G.723.1 and G.729, both extensively using Linear Predictive Coding (LPC) due to its ability to achieve high compression ratios while maintaining satisfactory speech quality. During the encoding process, it is feasible to hide information within the payload (i.e., speech frames). Steganographic methods based on low bit-rate V oIP 1556-6021 © 2025 IEEE. All rights reserved, including rights for text and data mining, and training of artiﬁcial intelligence and similar technologies. Personal use is permitted, but republication /redistribution requires IEEE permission. See https://www.ieee.org/publications/rights/index.html for more information. Authorized licensed use limited to: National Huaqi",
+          "distance": 1.3049612045288086,
+          "retrieval_rank": 11
+        }
+      ],
+      "agent_trace": {
+        "route_decision": {
+          "tool": "rag",
+          "input": "Do Paper1 and Paper2 address the same research problem?",
+          "reason": "This is a document-based comparison question about the loaded local papers."
+        },
+        "tool_used": "rag",
+        "tool_input": "Do Paper1 and Paper2 address the same research problem?",
+        "fallback_used": false,
+        "context_sufficient": true,
+        "context_metrics": {
+          "multi_agent": true,
+          "question_type": "COMPARISON",
+          "sub_metrics": [
+            {
+              "sub_id": "s1",
+              "target_source": "Paper1.pdf",
+              "context_sufficient": true,
+              "error": ""
+            },
+            {
+              "sub_id": "s2",
+              "target_source": "Paper2.pdf",
+              "context_sufficient": true,
+              "error": ""
+            }
+          ],
+          "synthesizer_mode": "llm_comparison"
+        },
+        "error": "",
+        "retry_count": 0,
+        "workflow": [
+          "choose_tool",
+          "planner",
+          "answer_worker",
+          "synthesizer",
+          "generate_answer"
+        ],
+        "plan": {
+          "question_type": "COMPARISON",
+          "subtasks": [
+            {
+              "sub_id": "s1",
+              "sub_question": "What is the research problem addressed in Paper1?",
+              "target_source": "Paper1.pdf"
+            },
+            {
+              "sub_id": "s2",
+              "sub_question": "What is the research problem addressed in Paper2?",
+              "target_source": "Paper2.pdf"
+            }
+          ]
+        },
+        "sub_answers": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "sub_question": "What is the research problem addressed in Paper1?",
+            "context_sufficient": true,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "Based on the context, the research problem addressed in Paper1 is **steganalysis for speech steganography based on fixed codebook (FCB) parameters**. Specifically, the paper presents a method to detect covert communications that use FCB-based steganography in low-bit-rate speech streams, as FCB para"
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "sub_question": "What is the research problem addressed in Paper2?",
+            "context_sufficient": true,
+            "error": "",
+            "retrieved_chunk_count": 10,
+            "answer_preview": "Based on the context provided, the research problem addressed in Paper2 is the difficulty of efficient steganalysis for network voice streams under challenging detection scenarios, specifically **low embedding rates (e.g., as low as 10%) and short transmission durations (e.g., only 0.1s)**. The text"
+          }
+        ],
+        "available_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf",
+          "Paper3.pdf"
+        ]
+      },
+      "workflow": [
+        "choose_tool",
+        "planner",
+        "answer_worker",
+        "synthesizer",
+        "generate_answer"
+      ],
+      "plan": {
+        "question_type": "COMPARISON",
+        "subtasks": [
+          {
+            "sub_id": "s1",
+            "sub_question": "What is the research problem addressed in Paper1?",
+            "target_source": "Paper1.pdf"
+          },
+          {
+            "sub_id": "s2",
+            "sub_question": "What is the research problem addressed in Paper2?",
+            "target_source": "Paper2.pdf"
+          }
+        ]
+      },
+      "sub_answers": [
+        {
+          "sub_id": "s1",
+          "target_source": "Paper1.pdf",
+          "sub_question": "What is the research problem addressed in Paper1?",
+          "context_sufficient": true,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "Based on the context, the research problem addressed in Paper1 is **steganalysis for speech steganography based on fixed codebook (FCB) parameters**. Specifically, the paper presents a method to detect covert communications that use FCB-based steganography in low-bit-rate speech streams, as FCB para"
+        },
+        {
+          "sub_id": "s2",
+          "target_source": "Paper2.pdf",
+          "sub_question": "What is the research problem addressed in Paper2?",
+          "context_sufficient": true,
+          "error": "",
+          "retrieved_chunk_count": 10,
+          "answer_preview": "Based on the context provided, the research problem addressed in Paper2 is the difficulty of efficient steganalysis for network voice streams under challenging detection scenarios, specifically **low embedding rates (e.g., as low as 10%) and short transmission durations (e.g., only 0.1s)**. The text"
+        }
+      ],
+      "context_sufficient": true,
+      "context_metrics": {
+        "multi_agent": true,
+        "question_type": "COMPARISON",
+        "sub_metrics": [
+          {
+            "sub_id": "s1",
+            "target_source": "Paper1.pdf",
+            "context_sufficient": true,
+            "error": ""
+          },
+          {
+            "sub_id": "s2",
+            "target_source": "Paper2.pdf",
+            "context_sufficient": true,
+            "error": ""
+          }
+        ],
+        "synthesizer_mode": "llm_comparison"
+      },
+      "retrieved_source_distribution": {
+        "total_chunks": 20,
+        "counts": {
+          "Paper1.pdf": 10,
+          "Paper2.pdf": 10
+        },
+        "percentages": {
+          "Paper1.pdf": 0.5,
+          "Paper2.pdf": 0.5
+        },
+        "unique_sources": [
+          "Paper1.pdf",
+          "Paper2.pdf"
+        ]
+      },
+      "expected_source_coverage": true,
+      "workflow_contains_planner": true,
+      "workflow_contains_answer_worker": true,
+      "workflow_contains_synthesizer": true,
+      "workflow_contains_multi_agent": true,
+      "multi_agent_metric": true,
+      "tool_used": "rag",
+      "latency_ms": 16056.86,
+      "request_error": "",
+      "relevance_gate_rejected": false,
+      "outcome": "multi_agent_answered_with_expected_sources"
+    }
+  ]
+}

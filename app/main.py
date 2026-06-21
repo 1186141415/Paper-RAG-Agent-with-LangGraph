@@ -56,6 +56,76 @@ class QueryRequest(BaseModel):
     question: str
 
 
+def _summarize_sub_answers(sub_answers) -> list[dict]:
+    if not isinstance(sub_answers, list):
+        return []
+
+    summaries: list[dict] = []
+
+    for item in sub_answers:
+        if not isinstance(item, dict):
+            continue
+
+        answer = str(item.get("answer") or "")
+        retrieved_chunks = item.get("retrieved_chunks")
+        if not isinstance(retrieved_chunks, list):
+            retrieved_chunks = []
+
+        summaries.append({
+            "sub_id": item.get("sub_id", ""),
+            "target_source": item.get("target_source"),
+            "sub_question": item.get("sub_question", ""),
+            "context_sufficient": bool(item.get("context_sufficient")),
+            "error": item.get("error", "") or "",
+            "retrieved_chunk_count": len(retrieved_chunks),
+            "answer_preview": answer[:300],
+        })
+
+    return summaries
+
+
+def _build_agent_trace(result: dict) -> dict:
+    decision = result.get("decision") or {}
+    if not isinstance(decision, dict):
+        decision = {}
+
+    tool_result = result.get("tool_result") or {}
+    if not isinstance(tool_result, dict):
+        tool_result = {}
+
+    subtasks = result.get("subtasks", [])
+    if not isinstance(subtasks, list):
+        subtasks = []
+
+    available_sources = result.get("available_sources", [])
+    if not isinstance(available_sources, list):
+        available_sources = []
+
+    tool_used = tool_result.get("tool_name") or decision.get("tool", "") or ""
+    tool_input = tool_result.get("tool_input") or decision.get("input", "") or ""
+
+    return {
+        "route_decision": decision,
+        "tool_used": tool_used,
+        "tool_input": tool_input,
+        "fallback_used": result.get("fallback_used", False),
+        "context_sufficient": result.get("context_sufficient"),
+        "context_metrics": result.get("context_metrics", {}) or {},
+        "error": result.get("error", "") or "",
+        "retry_count": result.get("retry_count", 0),
+        "workflow": result.get(
+            "workflow_path",
+            ["choose_tool", "execute_tool", "generate_answer"],
+        ),
+        "plan": {
+            "question_type": result.get("question_type", "") or "",
+            "subtasks": subtasks,
+        },
+        "sub_answers": _summarize_sub_answers(result.get("sub_answers", [])),
+        "available_sources": available_sources,
+    }
+
+
 @app.post("/ask")
 def ask_question(req: QueryRequest):
     try:
@@ -70,23 +140,7 @@ def ask_question(req: QueryRequest):
         answer = result.get("final_answer", "")
         chunks = result.get("retrieved_chunks", [])
 
-        decision = result.get("decision", {})
-        tool_result = result.get("tool_result", {})
-
-        agent_trace = {
-            "route_decision": decision,
-            "tool_used": tool_result.get("tool_name", ""),
-            "tool_input": tool_result.get("tool_input", ""),
-            "fallback_used": result.get("fallback_used", False),
-            "context_sufficient": result.get("context_sufficient"),
-            "context_metrics": result.get("context_metrics", {}),
-            "error": result.get("error", ""),
-            "retry_count": result.get("retry_count", 0),
-            "workflow": result.get(
-                "workflow_path",
-                ["choose_tool", "execute_tool", "generate_answer"]
-            )
-        }
+        agent_trace = _build_agent_trace(result)
 
         session_manager.append_turn(
             req.session_id,

@@ -133,20 +133,23 @@ def clear_session(session_id: str, request: Request):
 
 @app.post("/reload_kb")
 def reload_kb(request: Request):
-    logger.info("Reloading knowledge base...")
-    print("🔄 Reloading knowledge base...")
+    try:
+        logger.info("Reloading knowledge base...")
 
-    rag, workflow, total_docs, total_chunks = _build_rag_and_workflow()
+        rag, workflow, total_docs, total_chunks = _build_rag_and_workflow()
 
-    # 原子替换 app.state 上的引用：进行中的请求继续持有旧对象，新请求拿到新对象
-    request.app.state.rag = rag
-    request.app.state.workflow = workflow
+        # 原子替换 app.state 上的引用：进行中的请求继续持有旧对象，新请求拿到新对象
+        request.app.state.rag = rag
+        request.app.state.workflow = workflow
 
-    logger.info("Knowledge base and AgentWorkflow reloaded successfully.")
+        logger.info("Knowledge base and AgentWorkflow reloaded successfully.")
 
-    return {
-        "status": "success",
-        "message": f"Knowledge base reloaded. Total chunks: {total_chunks}",
-        "total_docs": total_docs,
-        "total_chunks": total_chunks,
-    }
+        return {
+            "status": "success",
+            "message": f"Knowledge base reloaded. Total chunks: {total_chunks}",
+            "total_docs": total_docs,
+            "total_chunks": total_chunks,
+        }
+    except Exception as e:
+        logger.exception("Error occurred in /reload_kb")
+        raise HTTPException(status_code=500, detail=str(e))

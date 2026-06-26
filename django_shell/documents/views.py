@@ -42,10 +42,11 @@ def upload_page(request):
                         if response.status_code == 200:
                             reload_result = response.json()
                         else:
+                            detail = response.text.strip()[:500]
                             error = (
                                 f"File uploaded, but reload_kb failed. "
                                 f"Status code: {response.status_code}, "
-                                f"Response: {response.text}"
+                                f"Response: {detail or response.reason}"
                             )
 
                     except requests.exceptions.ReadTimeout:

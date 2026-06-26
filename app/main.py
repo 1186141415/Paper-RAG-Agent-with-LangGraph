@@ -118,16 +118,16 @@ def clear_session(session_id: str):
 
 @app.post("/reload_kb")
 def reload_kb():
-    logger.info("Reloading knowledge base...")
-    print("🔄 Reloading knowledge base...")
-
-    total_docs, total_chunks = _init_rag_and_workflow()
-
-    logger.info("Knowledge base and AgentWorkflow reloaded successfully.")
-
-    return {
-        "status": "success",
-        "message": f"Knowledge base reloaded. Total chunks: {total_chunks}",
-        "total_docs": total_docs,
-        "total_chunks": total_chunks,
-    }
+    try:
+        logger.info("Reloading knowledge base...")
+        total_docs, total_chunks = _init_rag_and_workflow()
+        logger.info("Knowledge base and AgentWorkflow reloaded successfully.")
+        return {
+            "status": "success",
+            "message": f"Knowledge base reloaded. Total chunks: {total_chunks}",
+            "total_docs": total_docs,
+            "total_chunks": total_chunks,
+        }
+    except Exception as e:
+        logger.exception("Error occurred in /reload_kb")
+        raise HTTPException(status_code=500, detail=str(e))

@@ -31,13 +31,18 @@ def chat_home(request):
                 ChatMessage.objects.create(
                     session=session_obj,
                     role="user",
-                    content=question
+                    content=question,
+                    metadata={},
                 )
 
                 ChatMessage.objects.create(
                     session=session_obj,
                     role="assistant",
-                    content=result.get("answer", "")
+                    content=result.get("answer", ""),
+                    metadata={
+                        "agent_trace": agent_trace or {},
+                        "chunks": chunks or [],
+                    },
                 )
 
             except Exception as e:
